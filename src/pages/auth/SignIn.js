@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 // import { CustomImg, LoadingSprinner } from "../../components/CustomTag";
 import ReactLoading from "react-loading";
 import avata from "../../assets/img/logo/login.png";
+import logo from "../../assets/img/logo/Manager.png";
 import utils from "../../utils/utils";
 import "./SignIn.css";
 import {
@@ -81,15 +82,15 @@ class SignIn extends React.Component {
                     )}
                     <Container className='px-0'>
                         <Card className='SignIn-form'>
-                            <CardBody className='pt-0 pb-0 '>
+                            <CardBody className='pt-0 pb-0' >
                                 <div>
-                                    {/* <div className='text-center '>
+                                    <div className='text-center mb-4'>
                                         <img
                                             key={utils.randomString()}
-                                            src={avata}
+                                            src={logo}
                                             className='img-fluid'
                                         />
-                                    </div> */}
+                                    </div>
                                     <h1 className='text-center font-weight-bold pb-3 m-auto'>
                                         LOGIN
                                     </h1>
@@ -132,10 +133,10 @@ class SignIn extends React.Component {
                                                     {"Đăng nhập"}
                                                 </Button>
                                             ) : (
-                                                <div className='d-flex justify-content-center'>
-                                                    <ReactLoading type='bars' color='black' />
-                                                </div>
-                                            )}
+                                                    <div className='d-flex justify-content-center'>
+                                                        <ReactLoading type='bars' color='black' />
+                                                    </div>
+                                                )}
                                         </div>
                                     </Form>
                                 </div>

@@ -93,13 +93,9 @@ class Sidebar extends React.Component {
 
                     <ul className='sidebar-nav'>
                         <React.Fragment>
-                            <SidebarItem name='Epic' icon={faStar} to='/project/epic' />
-                            <SidebarItem name='Timeline' icon={faList} to='/project/timeline' />
-                            <SidebarItem name='Work' icon={faTasks} to='/project/work' />
-                            <SidebarItem name='Report' icon={faChartLine} to='/project/report' />
-                            <SidebarItem name='Issue' icon={faBook} to='/project/issue' />
-                            <SidebarItem name='File' icon={faFolder} to='/project/storage' />
-                            <SidebarItem name='Members' icon={faUsers} to='/project/clients' />
+                            <SidebarItem name='Activites' icon={faChartLine} to='/project/timeline' />
+                            <SidebarItem name='Configurations' icon={faCog} to='/project/work' />
+                            <SidebarItem name='History' icon={faList} to='/project/report' />
                             {this.state.isAdmin ? (
                                 <SidebarItem name='Admin' icon={faCog} to='/project/admin' />
                             ) : null}
