@@ -1,0 +1,13 @@
+.navbar .dropdown-menu .list-group {
+    max-height: 30rem;
+    overflow-y: auto;
+}
+
+.navbar__dropdown-menu {
+    right: -8rem;
+    left: auto;
+}
+
+.navbar__background-read {
+    background: lightgray
+}

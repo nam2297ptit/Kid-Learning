@@ -1,0 +1,21 @@
+.discover__link:hover {
+    color: black !important;
+    background-color: blue
+}
+
+.discover__project-content{
+    flex: 1;
+}
+
+.discover__filter-list a {
+    padding: .5rem 1rem;
+    text-decoration: none;
+}
+
+.discover__filter-list a.active {
+    background: #9dce0a;
+    color: #fff;
+}
+.discover__project-content-icon .active{
+    color:#ffb710;
+}

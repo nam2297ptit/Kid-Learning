@@ -1,0 +1,33 @@
+@media only screen and (min-width: 360px) and (max-width: 375px) {
+    .SignIn-form,
+    .SignIn-alert {
+        width: 15rem;
+    }
+}
+
+@media only screen and (min-width: 376px) and (max-width: 414px) {
+    .SignIn-form {
+        width: 16rem;
+        height: 25rem;
+    }
+    .SignIn-alert {
+        width: 16rem;
+    }
+}
+
+@media only screen and (min-width: 415px) and (max-width: 1920px) {
+    .SignIn-form {
+        width: 25rem;
+        min-height: 33rem;
+    }
+    .SignIn-alert {
+        width: 25rem;
+    }
+    .SignIn-card {
+        padding-left: 3rem;
+    }
+}
+
+.SignIn-form {
+    border-radius: 1.5rem;
+}

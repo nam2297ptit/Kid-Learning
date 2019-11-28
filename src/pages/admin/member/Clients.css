@@ -1,0 +1,11 @@
+.Clients__suggestion {
+    max-height: 20rem;
+    overflow: auto;
+}
+.Clients__suggestion--member:hover {
+    background-color: lightgray;;
+    max-height: 20rem;
+}
+.Clients__suggestion--member.active{
+    background-color:lightgray;;
+}
