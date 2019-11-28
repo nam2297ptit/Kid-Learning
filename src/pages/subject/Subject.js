@@ -22,6 +22,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobeAmericas, faKey, faPlus } from "@fortawesome/free-solid-svg-icons";
 import TableProject from "./TableProject";
+import { CustomImg } from "../../components/CustomTag";
 // import Notification from "../../components/Notification";
 // import { LoadingSprinner } from "../../components/CustomTag";
 //import "./Subject.css";
@@ -37,6 +38,7 @@ class Project extends React.Component {
         super(props);
         this.state = {
             data: [1, 2, 3, 4, 5],
+            hover: null,
             showModal: {
                 create_project: false,
             },
@@ -314,20 +316,24 @@ class Project extends React.Component {
                                         to='#'
                                         onClick={this.handleSelectProject.bind(this)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
-                                        <Card>
-                                            <img
+                                        <Card
+                                            onMouseOver={() => this.setState({ hover: i })}
+                                            onMouseLeave={() => this.setState({ hover: null })}>
+                                            <CustomImg
                                                 className='img-thumbnail img-fluid'
                                                 style={{ height: "200px" }}
                                                 src='https://cdnstepup.r.worldssl.net/wp-content/uploads/2019/03/learn-english1-vicook-6e068f469abc86e7b50da7d64c57c3d1-min.jpg'
                                                 alt='Card image cap'
                                             />
-                                            <CardBody>
-                                                <CardTitle>
-                                                    <h3 className='text-center font-weight-bold'>
-                                                        Tiếng anh lớp 6
-                                                    </h3>
-                                                </CardTitle>
-                                            </CardBody>
+                                            {this.state.hover !== i ? null : (
+                                                <CardBody>
+                                                    <CardTitle>
+                                                        <h3 className='text-center font-weight-bold'>
+                                                            Tiếng anh lớp 6
+                                                        </h3>
+                                                    </CardTitle>
+                                                </CardBody>
+                                            )}
                                         </Card>
                                     </Link>
                                 </Col>
