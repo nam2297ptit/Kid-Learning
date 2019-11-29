@@ -37,7 +37,7 @@ class Project extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [1, 2, 3],
+            data: [1, 2, 3, 4, 5, 6],
             hover: null,
             showModal: {
                 create_project: false,

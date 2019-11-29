@@ -15,7 +15,7 @@ import SignIn from "../pages/auth/SignIn";
 import Subject from "../pages/subject/Subject";
 
 // Questions
-import Questions from "../pages/questions/Questions";
+// import Questions from "../pages/questions/Questions";
 import Activity from "../pages/activity/Activity.js";
 // import Pricing from "../pages/pages/Pricing";
 // import Clients from "../pages/pages/Clients";
@@ -100,11 +100,11 @@ const pageRoutes = {
     path: "/",
     name: "Landing Page",
     children: [
-        {
-            path: "/questions",
-            name: "Danh sách câu hỏi",
-            component: Questions,
-        },
+        // {
+        //     path: "/questions",
+        //     name: "Danh sách câu hỏi",
+        //     component: Questions,
+        // },
         {
             path: "/activity",
             name: "Hoạt động",

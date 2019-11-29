@@ -29,7 +29,6 @@ import {
     faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { CustomImg, LoadingSprinner, Description } from "../../components/CustomTag";
-import "./Timeline.css";
 import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
 import cup_sliver from "../../assets/img/photos/cup-sliver.png";
