@@ -37,7 +37,7 @@ class Project extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [1, 2, 3, 4, 5],
+            data: [1, 2, 3, 4, 5, 6],
             hover: null,
             showModal: {
                 create_project: false,
@@ -284,9 +284,9 @@ class Project extends React.Component {
                     </ModalFooter>
                 </Modal>
 
-                <Container fluid className='width-percent-80 w-75'>
+                <Container fluid className='width-percent-60 w-75'>
                     <Row>
-                        <Col xs='2'>
+                        <Col xs='4'>
                             <Input
                                 className='width-percent-40'
                                 id='inputSearch'
@@ -318,22 +318,32 @@ class Project extends React.Component {
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <Card
                                             onMouseOver={() => this.setState({ hover: i })}
-                                            onMouseLeave={() => this.setState({ hover: null })}>
+                                            onMouseLeave={() => this.setState({ hover: null })}
+                                            outline
+                                            color={this.state.hover !== i ? null : "success"}>
                                             <CustomImg
-                                                className='img-thumbnail img-fluid'
+                                                className='img-fluid img-thumbnail'
                                                 style={{ height: "200px" }}
-                                                src='https://cdnstepup.r.worldssl.net/wp-content/uploads/2019/03/learn-english1-vicook-6e068f469abc86e7b50da7d64c57c3d1-min.jpg'
+                                                src='https://data.tienganh123.com/images/phothong/img/lop-6-moi.png'
                                                 alt='Card image cap'
                                             />
-                                            {this.state.hover !== i ? null : (
+                                            <CardBody>
+                                                <CardTitle>
+                                                    <h3 className='text-center font-weight-bold'>
+                                                        Tiếng anh lớp 6
+                                                    </h3>
+                                                </CardTitle>
+                                            </CardBody>
+                                            {/* {this.state.hover !== i ? null : (
                                                 <CardBody>
                                                     <CardTitle>
                                                         <h3 className='text-center font-weight-bold'>
                                                             Tiếng anh lớp 6
                                                         </h3>
                                                     </CardTitle>
+                                                    <Button color='primary'>primary</Button>{" "}
                                                 </CardBody>
-                                            )}
+                                            )} */}
                                         </Card>
                                     </Link>
                                 </Col>

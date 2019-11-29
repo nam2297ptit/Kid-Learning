@@ -182,7 +182,7 @@ function getHashSafe() {
     return hash;
 }
 
-function returnWhenThisNull(data, dataWhenNull) {
+function returnThisWhenNull(data, dataWhenNull) {
     return isEmpty(data) ? dataWhenNull : data;
 }
 
@@ -257,7 +257,7 @@ module.exports = {
     pushCartDataSafe: pushCartDataSafe,
     popCartDataSafe: popCartDataSafe,
     resetCartData: resetCartData,
-    returnWhenThisNull: returnWhenThisNull,
+    returnThisWhenNull: returnThisWhenNull,
     getResultFormat: getResultFormat,
 
     alert: alert,

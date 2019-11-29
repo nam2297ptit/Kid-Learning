@@ -126,18 +126,18 @@ export class Description extends React.Component {
                         defaultValue={this.props.description}
                         onChange={this.handleChange.bind(this)}
                         modules={this.state.modules}
-                        className='scrollbar-width-1x scrollbar-style-1'
+                        className='scrollbar-width-1x scrollbar-style-1 '
                     />
                 ) : (
                     <div
-                        className='overflow-y-20x border min-height-1x cursor-pointer scrollbar-style-1 scrollbar-width-1x'
+                        className='overflow-y-20x border min-height-0.5x cursor-pointer scrollbar-style-1 scrollbar-width-1x'
                         onClick={this.toggle.bind(this, "edit")}>
                         <div
                             className='p-2'
                             dangerouslySetInnerHTML={{
                                 __html: utils.returnThisWhenNull(
                                     this.props.description,
-                                    "Type something about this work...",
+                                    "Điền nội dung câu hỏi vào đây....",
                                 ),
                             }}
                         />
