@@ -13,6 +13,8 @@ import SignIn from "../pages/auth/SignIn";
 
 // Sucject
 import Subject from "../pages/subject/Subject";
+// Quiz
+import Quiz from "../pages/quiz/Quiz";
 
 // Pages
 // import Profile from "../pages/profile/Profile";
@@ -49,6 +51,11 @@ const dashboardRoutes = {
             path: "/subject",
             name: "Danh sách môn học",
             component: Subject,
+        },
+        {
+            path: "/quiz",
+            name: "Danh sách môn học",
+            component: Quiz,
         },
     ],
 };
