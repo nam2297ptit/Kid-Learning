@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import {
     dashboard as dashboardRoutes,
-    landing as landingRoutes,
+    page as pageRoutes,
     auth as authRoutes,
     dashboardWithoutSidebar as dashboardWithoutSidebarRoutes,
 } from "./index";
@@ -83,10 +83,12 @@ function Routes() {
             {/* <ScrollToTop> */}
             <Switch>
                 <Route exact path='/' render={() => <Redirect to='/subject' />} />
-                {/* {PublicRoute(LandingLayout, landingRoutes)} */}
+
                 {PublicRoute(AuthLayout, authRoutes)}
 
-                {PrivateRoute(DashboardLayout, dashboardRoutes, true)}
+                {PublicRoute(DashboardLayout, dashboardRoutes, true)}
+
+                {PrivateRoute(DashboardLayout, pageRoutes, true)}
                 {/* 
                 {sessionStorage.getItem("project") !== null ? (
                     PrivateRoute(DashboardLayout, dashboardRoutes, true)

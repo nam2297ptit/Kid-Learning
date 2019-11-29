@@ -14,8 +14,9 @@ import SignIn from "../pages/auth/SignIn";
 // Sucject
 import Subject from "../pages/subject/Subject";
 
-// Pages
-// import Profile from "../pages/profile/Profile";
+// Questions
+import Questions from "../pages/questions/Questions";
+import Activity from "../pages/activity/Activity.js";
 // import Pricing from "../pages/pages/Pricing";
 // import Clients from "../pages/pages/Clients";
 // import Work from "../pages/work/Work";
@@ -23,7 +24,7 @@ import Subject from "../pages/subject/Subject";
 // import Storage from "../pages/storage/Storage";
 // import Report from "../pages/report/Report";
 // import Admin from "../pages/admin/Admin";
-// import Timeline from "../pages/timeline/Timeline.js";
+
 // import WorkDetail from "../pages/work/work-detail/WorkDetail";
 // import WorkDeTailActivities from "../pages/work/work-detail/CardLeft/Activities";
 // import WorkDeTailComment from "../pages/work/work-detail/CardLeft/Comment";
@@ -95,13 +96,24 @@ const authRoutes = {
     ],
 };
 
-const landingRoutes = {
+const pageRoutes = {
     path: "/",
     name: "Landing Page",
-    children: [],
+    children: [
+        {
+            path: "/questions",
+            name: "Danh sách câu hỏi",
+            component: Questions,
+        },
+        {
+            path: "/activity",
+            name: "Hoạt động",
+            component: Activity,
+        },
+    ],
 };
 
-export const landing = [landingRoutes];
+export const page = [pageRoutes];
 // Dashboard specific routes
 export const dashboard = [dashboardRoutes];
 
