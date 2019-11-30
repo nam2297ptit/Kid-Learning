@@ -14,7 +14,7 @@ import {
     DropdownItem,
 } from "reactstrap";
 
-import { PieChart, Settings, User } from "react-feather";
+import { PieChart, Settings, User, LogOut } from "react-feather";
 import { CustomImg } from "../components/CustomTag";
 
 import logo from "../assets/img/logo/logo.png";
@@ -50,7 +50,7 @@ class NavbarComponent extends React.Component {
                                     <Settings size={18} className='align-middle' />
                                 </DropdownToggle>
                             </span>
-                            <span className='d-none d-sm-inline-block'>
+                            {/* <span className='d-none d-sm-inline-block'>
                                 <DropdownToggle nav caret>
                                     <CustomImg
                                         src=''
@@ -58,36 +58,15 @@ class NavbarComponent extends React.Component {
                                         alt='Avatar'
                                     />
                                     <h5 className='text-dark mr-1 d-inline font-weight-bold'>
-                                        Admin
+                                        Sign Out
                                     </h5>
                                 </DropdownToggle>
-                            </span>
-                            <DropdownMenu right>
-                                <Link to='/profile' className='text-dark'>
-                                    <DropdownItem>
-                                        <User size={18} className='align-middle mr-2' />
-                                        Profile
-                                    </DropdownItem>
-                                </Link>
-                                <Link to=''>
-                                    <DropdownItem>
-                                        <PieChart size={18} className='align-middle mr-2' />
-                                        Analytics
-                                    </DropdownItem>
-                                </Link>
-                                <DropdownItem divider />
-                                <Link to=''>
-                                    <DropdownItem>Settings & Privacy</DropdownItem>
-                                </Link>
-                                <Link to=''>
-                                    <DropdownItem>Help</DropdownItem>
-                                </Link>
-                                <Link to='/auth/sign-in' className='text-dark'>
-                                    <DropdownItem onClick={this.hanleLogout.bind(this)}>
-                                        Sign out
-                                    </DropdownItem>
-                                </Link>
-                            </DropdownMenu>
+                            </span> */}
+
+                            <Link to='/auth/sign-in'>
+                                <h4 className='text-danger mt-2 d-inline'>LogOut</h4>
+                                <LogOut size={18} className='align-middle ml-2 mb-2 text-danger' />
+                            </Link>
                         </UncontrolledDropdown>
                     </Nav>
                 </Collapse>

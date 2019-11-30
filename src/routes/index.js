@@ -19,24 +19,7 @@ import Quiz from "../pages/quiz/Quiz";
 // Questions
 // import Questions from "../pages/questions/Questions";
 import Activity from "../pages/activity/Activity.js";
-// import Pricing from "../pages/pages/Pricing";
-// import Clients from "../pages/pages/Clients";
-// import Work from "../pages/work/Work";
-// import Wiki from "../pages/wiki/Wiki";
-// import Storage from "../pages/storage/Storage";
-// import Report from "../pages/report/Report";
-// import Admin from "../pages/admin/Admin";
-
-// import WorkDetail from "../pages/work/work-detail/WorkDetail";
-// import WorkDeTailActivities from "../pages/work/work-detail/CardLeft/Activities";
-// import WorkDeTailComment from "../pages/work/work-detail/CardLeft/Comment";
-// import Task from "../pages/task/Task";
-// import Epic from "../pages/epic/Epic";
-// import Issue from "../pages/issue/Issue";
-
-// import Root from "../pages/root/root";
-// import Term from "../pages/term/Term";
-// import Discover from "../pages/discover/Discover";
+import Configuration from "../pages/configuration/Configuration";
 
 // Dashboards
 // const Default = async(() => import("../pages/dashboards"));
@@ -52,11 +35,6 @@ const dashboardRoutes = {
             path: "/subject",
             name: "Danh sách môn học",
             component: Subject,
-        },
-        {
-            path: "/quiz",
-            name: "Danh sách môn học",
-            component: Quiz,
         },
     ],
 };
@@ -116,6 +94,16 @@ const pageRoutes = {
             path: "/activity",
             name: "Hoạt động",
             component: Activity,
+        },
+        {
+            path: "/quiz",
+            name: "Danh sách bài kiểm tra",
+            component: Quiz,
+        },
+        {
+            path: "/configuration",
+            name: "Cài đặt",
+            component: Configuration,
         },
     ],
 };

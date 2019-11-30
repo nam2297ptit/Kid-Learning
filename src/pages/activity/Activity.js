@@ -27,6 +27,8 @@ import {
     faPlus,
     faComment,
     faTrash,
+    faArrowAltCircleLeft,
+    faArrowAltCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { CustomImg, LoadingSprinner, Description } from "../../components/CustomTag";
 import cup from "../../assets/img/photos/cup.png";
@@ -427,6 +429,18 @@ class Timeline extends React.Component {
     render() {
         return (
             <Container fluid className='p-0  h-100'>
+                <Card className='my-0 mb-2 '>
+                    <CardHeader>
+                        <Link to='quiz'>
+                            <FontAwesomeIcon
+                                icon={faArrowAltCircleLeft}
+                                className='d-inline mr-2'
+                                size='2x'
+                            />
+                        </Link>
+                        <h4 className='d-inline mb-2 font-weight-bold'>Bài tập số 1</h4>
+                    </CardHeader>
+                </Card>
                 <Row>
                     <Col md='7' xl='8'>
                         <Questions />

@@ -7,7 +7,7 @@
 }
 
 .Term__content__sidebar a:hover {
-    color: #0c5021
+    color: #0c5021;
 }
 
 .Term__sidebar-toggled {
@@ -24,17 +24,17 @@
 }
 
 .Term__title {
-    z-index: 2000
+    z-index: 2000;
 }
 @media only screen and (max-width: 768px) and (min-width: 320px) {
     .Term__title-h3 {
-        width: calc(100% - 13.5rem)
+        width: calc(100% - 13.5rem);
     }
 }
 
-@media (min-width:768px) {
+@media (min-width: 768px) {
     .Term__title-h3 {
-        width: calc(100% - 17rem)
+        width: calc(100% - 17rem);
     }
 }
 
@@ -43,7 +43,7 @@
     top: 7rem;
 }
 
-@media (min-width:769px) {
+@media (min-width: 769px) {
     .Term__title h3 {
         font-size: 2rem;
     }
@@ -55,21 +55,20 @@
 .Term__content__details p a,
 .Term__content__details p a:hover,
 .Term__content__details p a:visited {
-    color: #3367d6
+    color: #3367d6;
 }
 
-.Term__menu>li>a.active {
+.Term__menu > li > a.active {
     color: #143796 !important;
-    background-color: transparent
+    background-color: transparent;
 }
 
-.Term__menu>li>a,
-.Term__menu>li>a:focus {
-    color: #222
+.Term__menu > li > a,
+.Term__menu > li > a:focus {
+    color: #222;
 }
 
-.Term__menu>li>a:focus:hover,
-.Term__menu>li>a:hover {
-    color: #0c5021
+.Term__menu > li > a:focus:hover,
+.Term__menu > li > a:hover {
+    color: #0c5021;
 }
-

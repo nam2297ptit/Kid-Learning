@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import { Box } from "react-feather";
-import { Badge } from "reactstrap";
+import { Badge, Button } from "reactstrap";
 // import PerfectScrollbar from "react-perfect-scrollbar";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,8 @@ import {
     faCog,
     faStar,
     faBook,
+    faSignOutAlt,
+    faArrowAltCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
 import routes from "../routes/index";
@@ -30,9 +32,7 @@ const SidebarItem = withRouter(({ name, badgeColor, badgeText, icon: Icon, locat
     return (
         <li className={"sidebar-item " + getSidebarItemClass(to)}>
             <NavLink to={to} className='sidebar-link' activeClassName='active'>
-                {Icon ? (
-                    <FontAwesomeIcon icon={Icon} className='align-middle mr-3' size='lg' />
-                ) : null}
+                {Icon ? <FontAwesomeIcon icon={Icon} className='align-middle mr-3' /> : null}
                 {name}
                 {badgeColor && badgeText ? (
                     <Badge color={badgeColor} size={18} className='sidebar-badge'>
@@ -68,16 +68,10 @@ class Sidebar extends React.Component {
                 [index]: isActive || isOpen || isHome,
             }));
         });
-
-        // const project = utils.getPermissionInProject();
-        // this.setState({ isAdmin: project.admin });
     }
 
     render() {
         const { sidebar, layout, user } = this.props;
-        // const userInfo = user.user;
-        // const name = userInfo.full_name;
-        // const avatar = userInfo.photo;
         return (
             <nav
                 className={
@@ -87,41 +81,55 @@ class Sidebar extends React.Component {
                 }>
                 <div className='sidebar-content'>
                     <a className='sidebar-brand' href='/'>
-                        <Box className='align-middle text-primary mr-2' size={24} />{" "}
-                        <span className='align-middle'>Fwork</span>
+                        <Box className='align-middle text-primary mr-2' size={30} />{" "}
+                        <span className='align-middle'>E-Learn Manager</span>
                     </a>
 
                     <ul className='sidebar-nav'>
                         <React.Fragment>
-                            <SidebarItem name='Activites' icon={faChartLine} to='/project/timeline' />
-                            <SidebarItem name='Configurations' icon={faCog} to='/project/work' />
-                            <SidebarItem name='History' icon={faList} to='/project/report' />
-                            {this.state.isAdmin ? (
-                                <SidebarItem name='Admin' icon={faCog} to='/project/admin' />
-                            ) : null}
+                            <h4>
+                                <SidebarItem name='Tests' icon={faTasks} to='/quiz' />
+                            </h4>
+                            <h4>
+                                <SidebarItem
+                                    name='Configurations'
+                                    icon={faCog}
+                                    to='/configuration'
+                                />
+                            </h4>
+                            <h4>
+                                <SidebarItem name='History' icon={faChartLine} to='/history' />
+                            </h4>
                         </React.Fragment>
                     </ul>
 
                     {/* {!layout.isBoxed && !sidebar.isSticky ? ( */}
-                    <div className='sidebar-bottom d-none d-lg-block'>
-                        <div className='media'>
-                            {/* <CustomImg
-                                className='rounded-circle mr-3'
-                                src={avatar}
-                                alt='Avatar'
-                                width='40'
-                                height='40'
-                            /> */}
-                            <div className='media-body'>
-                                {/* <h5 className='mb-1'>
-                                    {name.length < 20 ? name : name.substring(0, 20)}
-                                </h5> */}
-                                <div>
-                                    <FontAwesomeIcon icon={faCircle} className='text-success' />{" "}
-                                    Online
-                                </div>
-                            </div>
-                        </div>
+                    <div
+                        className='sidebar-bottom d-none d-lg-block m-auto bg-mute'
+                        style={{ "background-color": " #b3d1ff" }}>
+                        <media>
+                            <Link
+                                to={
+                                    window.location.pathname === "/activity" ||
+                                    window.location.pathname === "/configuration" ||
+                                    window.location.pathname === "/history"
+                                        ? "/quiz"
+                                        : window.location.pathname === "/quiz"
+                                        ? "subject"
+                                        : null
+                                }>
+                                <FontAwesomeIcon
+                                    icon={faArrowAltCircleLeft}
+                                    color='green'
+                                    size='2x'
+                                    className='d-inline mr-3'
+                                />
+                            </Link>
+
+                            <h4 className='font-weight-bold  m-auto text-center text-primary d-inline mb-4 '>
+                                Tiếng anh lớp 6
+                            </h4>
+                        </media>
                     </div>
                     {/* ) : null} */}
                 </div>

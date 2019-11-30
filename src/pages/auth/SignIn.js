@@ -5,9 +5,11 @@ import { connect } from "react-redux";
 // import { CustomImg, LoadingSprinner } from "../../components/CustomTag";
 import ReactLoading from "react-loading";
 import avata from "../../assets/img/logo/login.png";
-// import logo from "../../assets/img/logo/Manager.png";
+import logo from "../../assets/img/logo/Manager.png";
 import utils from "../../utils/utils";
 import "./SignIn.css";
+import { CustomImg } from "../../components/CustomTag";
+
 import {
     Button,
     Card,
@@ -90,9 +92,15 @@ class SignIn extends React.Component {
                                             src={logo}
                                             className='img-fluid'
                                         /> */}
+                                        <CustomImg
+                                            key={utils.randomString()}
+                                            src={logo}
+                                            alt='cup'
+                                            className='img--user--square-11x'
+                                        />
                                     </div>
                                     <h1 className='text-center font-weight-bold pb-3 m-auto'>
-                                        LOGIN
+                                        Sign In
                                     </h1>
                                     <Form onSubmit={this.handleSubmit}>
                                         <FormGroup>

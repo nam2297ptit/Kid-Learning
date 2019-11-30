@@ -21,11 +21,10 @@ import {
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobeAmericas, faKey, faPlus } from "@fortawesome/free-solid-svg-icons";
-import TableProject from "./TableProject";
 import { CustomImg } from "../../components/CustomTag";
 // import Notification from "../../components/Notification";
 // import { LoadingSprinner } from "../../components/CustomTag";
-//import "./Subject.css";
+import "./Subject.css";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Camera } from "react-feather";
@@ -66,8 +65,6 @@ class Project extends React.Component {
     }
 
     handleSelectProject() {
-        console.log("ssss");
-
         // api.getInfoProject(this.state.data.id, (err, result) => {
         //     if (err) {
         //         Notification(
@@ -87,11 +84,6 @@ class Project extends React.Component {
         //         window.location.replace("/project/work");
         //     }
         // });
-    }
-    handleChangeType(type) {
-        let tmp = Object.assign({}, this.state.temp);
-        tmp.is_private = type === "private";
-        this.setState({ temp: tmp });
     }
 
     handleChange(event) {
@@ -311,16 +303,18 @@ class Project extends React.Component {
                     <Row className='mt-3'>
                         {this.state.data.map((item, i) => {
                             return (
-                                <Col sm='3'>
+                                <Col xs='2.4 mr-auto ml-3 '>
                                     <Link
-                                        to='#'
+                                        to='/quiz'
                                         onClick={this.handleSelectProject.bind(this)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <Card
                                             onMouseOver={() => this.setState({ hover: i })}
                                             onMouseLeave={() => this.setState({ hover: null })}
                                             outline
-                                            color={this.state.hover !== i ? null : "success"}>
+                                            color={this.state.hover !== i ? null : "success"}
+                                            className='shadow-lg bg-white rounded'
+                                            style={{ "box-shadow": "10px 10px" }}>
                                             <CustomImg
                                                 className='img-fluid img-thumbnail'
                                                 style={{ height: "200px" }}
