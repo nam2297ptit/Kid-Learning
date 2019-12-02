@@ -61,8 +61,6 @@ function getInfoSubject(id, callback) {
 }
 
 function createQuiz(data, callback) {
-    console.log(data);
-
     axios({
         url: config_api.list_quizz,
         method: "POST",

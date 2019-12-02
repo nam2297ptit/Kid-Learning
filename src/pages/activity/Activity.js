@@ -177,23 +177,25 @@ class Questions extends React.Component {
             text: "",
             data: [],
             question: {
-                id: 1,
-                quizId: 1,
+                subjectId: null,
+                quizId: null,
                 linkImage: null,
                 linkVideo: null,
-                content: "1",
-                result: ["A", "B", "F", "D"],
+                content: "",
+                result: [],
                 key: null,
-                solution: "1",
-                createdDate: "2019-11-30T15:04:07.624Z",
+                solution: "",
             },
         }; // You can also pass a Quill Delta here
         this.handleChange = this.handleChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
+        this.handleSave = this.handleSave.bind(this);
     }
 
-    handleChange(value) {
-        this.setState({ text: value });
+    handleChange(event) {
+        let temp = Object.assign({}, this.state.question);
+        temp[event.target.name] = event.target.value;
+        this.setState({ temp: temp });
     }
 
     toggle(component) {
@@ -206,7 +208,7 @@ class Questions extends React.Component {
         let temp = [...this.state.data];
         console.log(temp);
         let question = {
-            id: 1,
+            subjectId: 1,
             quizId: 1,
             linkImage: null,
             linkVideo: null,
@@ -214,28 +216,36 @@ class Questions extends React.Component {
             result: ["A", "B", "F", "D"],
             key: null,
             solution: "1",
-            createdDate: "2019-11-30T15:04:07.624Z",
         };
         temp.push(question);
 
         this.setState({ data: temp });
     }
-
+    componentDidMount() {
+        this.setState({ data: this.props.questions });
+    }
     handleImageChange(event) {
-        //    let temp = Object.assign({}, this.state.temp);
+        let temp = Object.assign({}, this.state.temp);
 
-        //    temp[event.target.name] = event.target.value;
-        //    this.setState({
-        //        temp: temp,
-        //        tempLogo: event.target.value,
-        //    });
+        temp[event.target.name] = event.target.value;
+        this.setState({
+            temp: temp,
+            tempLogo: event.target.value,
+        });
         this.setState({
             changeLogo: event.target.value,
             tempLogo: event.target.value,
         });
     }
+    handleSave(content) {
+        let temp = Object.assign({}, this.state.question);
+        temp["content"] = content;
+        this.setState({ question: temp });
+    }
 
     render() {
+        console.log(this.state.question);
+
         return (
             <Card>
                 <CardHeader>
@@ -263,7 +273,7 @@ class Questions extends React.Component {
                                 </CardHeader>
                                 <CardBody>
                                     <Label>Nội dung câu hỏi</Label>
-                                    <Description />
+                                    <Description handleSave={this.handleSave} />
                                     <Row className='mt-2'>
                                         <Col sm='12' md='4'>
                                             <Label>Ảnh câu hỏi</Label>
@@ -437,17 +447,27 @@ class Timeline extends React.Component {
         this.state = {
             isLoaderAPI_Activities: false,
             isLoaderAPI_InfoProject: false,
+            questions: [],
+            statistical: {},
         };
     }
     componentDidMount() {
         const that = this;
-        api.getListQuiz(1, (err, result) => {
+        let id = JSON.parse(localStorage.getItem("quiz"));
+
+        api.getListQuiz(id, (err, result) => {
             if (err) {
+                console.log(err);
+
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
                 console.log(result);
 
-                that.setState({ data: result, isLoaderAPI: true });
+                that.setState({
+                    questions: result.questionArray,
+                    statistical: result.statistical,
+                    isLoaderAPI: true,
+                });
             }
         });
         // this.setState({
@@ -471,7 +491,7 @@ class Timeline extends React.Component {
                 </Card>
                 <Row>
                     <Col md='7' xl='8'>
-                        <Questions />
+                        <Questions questions={this.state.questions} />
                     </Col>
                     <Col md='5' xl='4'>
                         <Information />

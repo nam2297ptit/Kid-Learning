@@ -28,6 +28,7 @@ import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import avatar from "../../assets/img/avatars/avatar-2.jpg";
 import { CustomImg } from "../../components/CustomTag";
+import ReactLoading from "react-loading";
 import Data from "./Data.json";
 import { Link } from "react-router-dom";
 import notifier from "simple-react-notifications";
@@ -64,27 +65,7 @@ class TableQuiz extends Component {
     }
 
     handleSelectQuiz(id) {
-        console.log(id);
-
-        // api.getInfoProject(this.state.data.id, (err, result) => {
-        //     if (err) {
-        //         Notification(
-        //             "error",
-        //             "Error",
-        //             err.data === undefined ? err : err.data._error_message,
-        //         );
-        //     } else {
-        //         const { id, i_am_owner, i_am_admin, i_am_member } = result;
-        //         let project = {
-        //             id: id,
-        //             i_am_owner: i_am_owner,
-        //             i_am_admin: i_am_admin,
-        //             i_am_member: i_am_member,
-        //         };
-        //         sessionStorage.setItem("project", JSON.stringify(project));
-        //         window.location.replace("/project/work");
-        //     }
-        // });
+        localStorage.setItem("quiz", id);
     }
 
     render() {
@@ -131,7 +112,11 @@ class TableQuiz extends Component {
                                 <Col xs='11'>
                                     <Link
                                         to='/activity'
-                                        onClick={this.handleSelectQuiz.bind(this.props.index, this)}
+                                        replace='true'
+                                        onClick={this.handleSelectQuiz.bind(
+                                            this,
+                                            this.state.data.id,
+                                        )}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <div className='d-flex justify-content-between mt-2'>
                                             <div>{this.state.data.name}</div>
@@ -189,6 +174,7 @@ class Quiz extends Component {
                 time: "",
             },
             keyWord: null,
+            isLoaderAP: false,
         };
     }
 
@@ -250,7 +236,11 @@ class Quiz extends Component {
     }
 
     render() {
-        return (
+        return !this.state.isLoaderAPI ? (
+            <center>
+                <ReactLoading type='bars' color='black' />
+            </center>
+        ) : (
             <React.Fragment>
                 <Modal isOpen={this.state.isClose}>
                     <ModalHeader className='d-flex justify-content-center'>Create Quiz</ModalHeader>

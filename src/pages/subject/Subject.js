@@ -70,8 +70,8 @@ class Project extends React.Component {
         this.handleImageChange = this.handleImageChange.bind(this);
     }
 
-    handleSelectSubject() {
-        api.getInfoSubject(this.state.hover + 1, (err, result) => {
+    handleSelectSubject(id) {
+        api.getInfoSubject(id, (err, result) => {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
@@ -280,7 +280,7 @@ class Project extends React.Component {
                                     <Link
                                         to='/quiz'
                                         replace='true'
-                                        onClick={this.handleSelectSubject.bind(this)}
+                                        onClick={this.handleSelectSubject.bind(this, item.id)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <Card
                                             onMouseOver={() => this.setState({ hover: i })}

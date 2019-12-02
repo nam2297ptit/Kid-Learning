@@ -1,17 +1,14 @@
-const config_api = require("../../../config/config").config_api;
+const config_api = require("../../../config/config").config_api.quizz;
 const utils = require("../../../utils/utils");
 const axios = require("axios");
 
 function getListQuiz(id, callback) {
     axios({
-        url: config_api.list_quizz,
+        url: config_api.list_quizz + "/" + id,
         method: "GET",
         headers: {
             "Content-type": "application/json",
             authorization: "Bearer " + localStorage.getItem("token"),
-        },
-        params: {
-            subjectId: id,
         },
     })
         .then(result => {
