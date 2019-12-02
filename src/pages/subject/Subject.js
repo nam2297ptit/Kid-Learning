@@ -26,8 +26,15 @@ import { CustomImg } from "../../components/CustomTag";
 // import { LoadingSprinner } from "../../components/CustomTag";
 import "./Subject.css";
 import { connect } from "react-redux";
+import moment from "moment";
 import { Link } from "react-router-dom";
 import { Camera } from "react-feather";
+import ReactLoading from "react-loading";
+import notifier from "simple-react-notifications";
+import "simple-react-notifications/dist/index.css";
+
+import camera from "../../assets/img/photos/camera.png";
+import subject from "../../assets/img/photos/subject.png";
 
 const api = require("./api/api");
 const ValidInput = require("../../utils/ValidInput");
@@ -36,7 +43,7 @@ class Project extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [1, 2, 3, 4, 5, 6],
+            data: [],
             hover: null,
             showModal: {
                 create_project: false,
@@ -44,27 +51,26 @@ class Project extends React.Component {
             temp: {
                 name: "",
                 description: "",
-                is_private: true,
-                budget: "",
-                currency: "VND",
+                file: {},
             },
             submitted: false,
             isLoaderAPI: false,
             keyWord: null,
+            tempLogo: "",
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleCreateProject = this.handleCreateProject.bind(this);
+        this.handleCreateSubject = this.handleCreateSubject.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.changeSearchChars = this.changeSearchChars.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
 
-        this.handleSelectProject = this.handleSelectProject.bind(this);
+        this.handleSelectSubject = this.handleSelectSubject.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
     }
 
-    handleSelectProject() {
+    handleSelectSubject() {
         // api.getInfoProject(this.state.data.id, (err, result) => {
         //     if (err) {
         //         Notification(
@@ -103,10 +109,9 @@ class Project extends React.Component {
         state.submitted = false;
         state.temp.name = "";
         state.temp.description = "";
-        state.is_private = false;
-        state.temp.budget = "";
-        state.temp.currency = "";
+        state.temp.file = "";
         state.showModal.create_project = false;
+        state.tempLogo = "";
         this.setState(state);
     }
 
@@ -123,78 +128,71 @@ class Project extends React.Component {
     handleKeyPress(e) {
         if (e.target.value !== "") {
             if (e.key === "Enter") {
-                this.handleCreateProject();
+                this.handleCreateSubject();
             }
         }
     }
 
-    handleCreateProject() {
+    handleCreateSubject() {
         let state = Object.assign({}, this.state);
         const that = this;
         this.setState({ submitted: true });
 
         // stop here if form is invalid
-        const { name, description, budget } = this.state.temp;
-        if (!(name && description && budget && budget % 1000 === 0)) {
+        const { name } = this.state.temp;
+        if (!name) {
             return;
         }
-        api.createProject(state.temp, (err, result) => {
+
+        api.createSubject(state.temp, (err, result) => {
             if (err) {
                 this.setState({
-                    error: err.data === undefined ? err : err.data._error_message,
                     loading: false,
                 });
             } else {
                 state.data.push(result);
                 that.setState(state);
                 that.handleClose();
-                Notification("success", "Create project", "Created project is successfully!!!");
             }
         });
     }
 
     componentDidMount() {
         const that = this;
-        // api.getInfoProjectAll((err, result) => {
-        //     if (err) {
-        //         Notification(
-        //             "error",
-        //             "Error",
-        //             err.data === undefined ? err : err.data._error_message,
-        //         );
-        //     } else {
-        //         that.setState({ data: result, isLoaderAPI: true });
-        //     }
-        // });
+        api.getListSubject((err, result) => {
+            if (err) {
+                console.log(err);
+
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                that.setState({ data: result, isLoaderAPI: true });
+            }
+        });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state === nextState) {
-            return false;
-        }
-        return true;
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (this.state === nextState) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     handleImageChange(event) {
+        let temp = Object.assign({}, this.state.temp);
+
+        temp[event.target.name] = event.target.value;
         this.setState({
-            changeLogo: event.target.files[0],
-            tempLogo: URL.createObjectURL(event.target.files[0]),
+            temp: temp,
+            tempLogo: event.target.value,
         });
     }
 
     render() {
-        const { user } = this.props;
-        const maxPrivateProject = user.user.max_private_projects;
-        const maxPublicProject = user.user.max_public_projects;
-        const publicProject = this.state.data.filter(
-            project => !project.is_private && project.i_am_owner,
-        );
-        const countPublicProject = publicProject.length;
-        const privateProject = this.state.data.filter(
-            project => project.is_private && project.i_am_owner,
-        );
-        const countPrivateProject = privateProject.length;
-        return (
+        return !this.state.isLoaderAPI ? (
+            <center>
+                <ReactLoading type='bars' color='black' />
+            </center>
+        ) : (
             <React.Fragment>
                 <Modal isOpen={this.state.showModal.create_project} className='modal-project'>
                     <ModalHeader className='modal-project__header'>Tạo môn học</ModalHeader>
@@ -217,7 +215,7 @@ class Project extends React.Component {
                                         onKeyPress={this.handleKeyPress.bind(this)}
                                     />
                                     <FormFeedback invalid>
-                                        Name project is a required field!
+                                        Name subject is a required field!
                                     </FormFeedback>
                                 </FormGroup>
                                 <FormGroup>
@@ -226,40 +224,34 @@ class Project extends React.Component {
                                         type='textarea'
                                         rows='5'
                                         name='description'
-                                        placeholder='Description'
+                                        placeholder='Mô tả'
                                         value={this.state.temp.description}
                                         onChange={this.handleChange}
-                                        invalid={
-                                            this.state.submitted && !this.state.temp.description
-                                                ? true
-                                                : false
-                                        }
                                         onKeyPress={this.handleKeyPress.bind(this)}
                                     />
-                                    <FormFeedback invalid>
-                                        Description is a required field!
-                                    </FormFeedback>
                                 </FormGroup>
                             </Col>
                             <Col>
                                 <Label>Ảnh môn học</Label>
                                 <FormGroup>
+                                    <Input
+                                        className='boder'
+                                        type='text'
+                                        name='file'
+                                        id='logo_subject'
+                                        placeholder='Thêm đường dẫn ảnh vào đây'
+                                        onChange={this.handleImageChange}
+                                    />
                                     <Label
                                         for='logo_subject'
-                                        className='hover-pointer:hover d-flex justify-content-center my-auto'>
-                                        <Input
-                                            className='boder'
-                                            type='file'
-                                            name='file'
-                                            id='logo_subject'
-                                            hidden
-                                            onChange={this.handleImageChange}
-                                        />
-                                        <img
-                                            alt='Avatar project'
-                                            src={this.state.tempLogo || this.state.logo}
-                                            className='img-thumbnail'
+                                        className='hover-pointer:hover d-flex justify-content-center mt-2'
+                                        style={{ cursor: "-webkit-grab", cursor: "grab" }}>
+                                        <CustomImg
+                                            className='img-fluid img-thumbnail'
                                             style={{ height: "200px", width: "100%" }}
+                                            src={this.state.tempLogo || camera}
+                                            alt='image subject'
+                                            hidden={this.state.tempLogo === "" ? true : false}
                                         />
                                     </Label>
                                 </FormGroup>
@@ -270,7 +262,7 @@ class Project extends React.Component {
                         <Button color='secondary' onClick={this.handleClose.bind(this)}>
                             Cancel
                         </Button>
-                        <Button color='success' onClick={this.handleCreateProject.bind(this)}>
+                        <Button color='success' onClick={this.handleCreateSubject.bind(this)}>
                             Create
                         </Button>
                     </ModalFooter>
@@ -287,15 +279,7 @@ class Project extends React.Component {
                             />
                         </Col>
                         <Col>
-                            <Button
-                                className='float-right'
-                                disabled={
-                                    countPublicProject >= maxPublicProject &&
-                                    countPrivateProject >= maxPrivateProject
-                                        ? true
-                                        : false
-                                }
-                                onClick={this.handleShow.bind(this)}>
+                            <Button className='float-right' onClick={this.handleShow.bind(this)}>
                                 <FontAwesomeIcon icon={faPlus} /> Tạo môn học
                             </Button>
                         </Col>
@@ -303,10 +287,10 @@ class Project extends React.Component {
                     <Row className='mt-3'>
                         {this.state.data.map((item, i) => {
                             return (
-                                <Col xs='2.4 mr-auto ml-3 '>
+                                <Col md='2' sm='12' className='mr-2'>
                                     <Link
                                         to='/quiz'
-                                        onClick={this.handleSelectProject.bind(this)}
+                                        onClick={this.handleSelectSubject.bind(this)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <Card
                                             onMouseOver={() => this.setState({ hover: i })}
@@ -318,26 +302,25 @@ class Project extends React.Component {
                                             <CustomImg
                                                 className='img-fluid img-thumbnail'
                                                 style={{ height: "200px" }}
-                                                src='https://data.tienganh123.com/images/phothong/img/lop-6-moi.png'
-                                                alt='Card image cap'
+                                                src={item.image || subject}
+                                                alt='Image Subject'
                                             />
                                             <CardBody>
                                                 <CardTitle>
-                                                    <h3 className='text-center font-weight-bold'>
-                                                        Tiếng anh lớp 6
+                                                    <h3 className='text-center font-weight-bold text-primary'>
+                                                        {item.name || "Subject"}
                                                     </h3>
                                                 </CardTitle>
+                                                <h6 className='text-center font-weight-bold text-mute'>
+                                                    {"Description: " + item.description}
+                                                </h6>
+                                                <h6 className='text-center font-weight-bold text-mute'>
+                                                    {"Created : " +
+                                                        moment
+                                                            .utc(item.createdDate)
+                                                            .format("DD MMM YYYY hh:mm")}
+                                                </h6>
                                             </CardBody>
-                                            {/* {this.state.hover !== i ? null : (
-                                                <CardBody>
-                                                    <CardTitle>
-                                                        <h3 className='text-center font-weight-bold'>
-                                                            Tiếng anh lớp 6
-                                                        </h3>
-                                                    </CardTitle>
-                                                    <Button color='primary'>primary</Button>{" "}
-                                                </CardBody>
-                                            )} */}
                                         </Card>
                                     </Link>
                                 </Col>

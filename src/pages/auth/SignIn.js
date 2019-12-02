@@ -61,10 +61,8 @@ class SignIn extends React.Component {
                         loading: false,
                     });
                 } else {
-                    if (result.id !== undefined) {
-                        const { dispatch } = this.props;
-                        dispatch({ type: "LOGIN_USER", user: result });
-                        sessionStorage.setItem("Session", utils.randomString());
+                    if (result.authToken !== undefined) {
+                        localStorage.setItem("token", result.authToken);
                         window.location.replace("/");
                     }
                 }
@@ -87,11 +85,6 @@ class SignIn extends React.Component {
                             <CardBody className='pt-0 pb-0'>
                                 <div>
                                     <div className='text-center mb-4'>
-                                        {/* <img
-                                            key={utils.randomString()}
-                                            src={logo}
-                                            className='img-fluid'
-                                        /> */}
                                         <CustomImg
                                             key={utils.randomString()}
                                             src={logo}
@@ -106,11 +99,11 @@ class SignIn extends React.Component {
                                         <FormGroup>
                                             <Input
                                                 bsSize='mb-3'
-                                                type='email'
+                                                type='text'
                                                 name='email'
                                                 value={this.state.email}
                                                 onChange={this.handleChange}
-                                                placeholder='email'
+                                                placeholder='Username'
                                                 invalid={submitted && !email ? true : false}
                                             />
                                             <FormFeedback invalid>
@@ -124,7 +117,7 @@ class SignIn extends React.Component {
                                                 name='password'
                                                 value={this.state.password}
                                                 onChange={this.handleChange}
-                                                placeholder='password'
+                                                placeholder='Password'
                                                 invalid={submitted && !password ? true : false}
                                             />
                                             <FormFeedback invalid>

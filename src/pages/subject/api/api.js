@@ -1,14 +1,14 @@
-const config_api = require("../../../config/config").config_api;
+const config_api = require("../../../config/config").config_api.subject;
 const utils = require("../../../utils/utils");
 const axios = require("axios");
 
-function getInfoProjectAll(callback) {
+function getListSubject(callback) {
     axios({
-        url: config_api.project,
+        url: config_api.list_subject,
         method: "GET",
-        withCredentials: true,
         headers: {
             "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
         },
         data: {},
     })
@@ -58,20 +58,17 @@ function getInfoProject(id, callback) {
         });
 }
 
-function createProject(data, callback) {
+function createSubject(data, callback) {
     axios({
-        url: config_api.project,
+        url: config_api.list_subject,
         method: "POST",
-        withCredentials: true,
         headers: {
-            "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
         },
         data: {
             name: data.name,
             description: data.description,
-            is_private: data.is_private,
-            currency: data.currency,
-            budget: data.budget,
+            image: data.file,
         },
     })
         .then(result => {
@@ -115,8 +112,8 @@ function getRoleInProject(id, callback) {
 }
 
 module.exports = {
-    getInfoProjectAll: getInfoProjectAll,
+    getListSubject: getListSubject,
     getInfoProject: getInfoProject,
-    createProject: createProject,
+    createSubject: createSubject,
     getRoleInProject: getRoleInProject,
 };

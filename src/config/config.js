@@ -8,6 +8,9 @@ const config_api = {
         forgot_password: api_path + "auth/create_new_pass",
         user: api_path + "users",
     },
+    subject: {
+        list_subject: api_path + "subject",
+    },
 };
 
 module.exports = {

@@ -5,18 +5,15 @@ function login(email, password, callback) {
     axios({
         url: config_api.signin,
         method: "POST",
-        withCredentials: true,
         headers: {
             "Content-type": "application/json; charset=utf-8",
         },
         data: {
-            email: email,
+            userName: email,
             password: password,
         },
     })
         .then(result => {
-            console.log(result);
-
             return callback(false, result.data);
         })
         .catch(error => {
@@ -27,7 +24,6 @@ function login(email, password, callback) {
                 // Lỗi khi request được tạo ra nhưng server không hồi đáp, vd : net::ERR_CONNECTION_TIMED_OUT
                 return callback("Please check your internet connection to server");
             } else {
-                console.log(error.message);
                 // Lỗi khi thiết lập request status
                 return callback(error.message);
             }
