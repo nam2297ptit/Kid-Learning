@@ -77,9 +77,12 @@ function createQuiz(data, callback) {
         },
     })
         .then(result => {
+            console.log(result);
+
             return callback(false, result.data);
         })
         .catch(error => {
+            console.log(error);
             if (error.response) {
                 return callback(error.response);
             } else if (error.request) {

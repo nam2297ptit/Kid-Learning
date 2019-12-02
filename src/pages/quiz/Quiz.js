@@ -63,8 +63,8 @@ class TableQuiz extends Component {
         //this.setState({ data: temp });
     }
 
-    handleSelectQuiz() {
-        console.log("ssss");
+    handleSelectQuiz(id) {
+        console.log(id);
 
         // api.getInfoProject(this.state.data.id, (err, result) => {
         //     if (err) {
@@ -86,7 +86,6 @@ class TableQuiz extends Component {
         //     }
         // });
     }
-    componentDidMount() {}
 
     render() {
         return (
@@ -132,7 +131,7 @@ class TableQuiz extends Component {
                                 <Col xs='11'>
                                     <Link
                                         to='/activity'
-                                        onClick={this.handleSelectQuiz.bind(this)}
+                                        onClick={this.handleSelectQuiz.bind(this.props.index, this)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <div className='d-flex justify-content-between mt-2'>
                                             <div>{this.state.data.name}</div>
@@ -195,18 +194,14 @@ class Quiz extends Component {
 
     componentDidMount() {
         const that = this;
-        api.getListQuiz(1, (err, result) => {
+        let id = JSON.parse(localStorage.getItem("subject")).id;
+        api.getListQuiz(id, (err, result) => {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
-                console.log(result);
-
                 that.setState({ data: result, isLoaderAPI: true });
             }
         });
-        // this.setState({
-        //     data: Data,
-        // });
     }
 
     handleSearch(event) {

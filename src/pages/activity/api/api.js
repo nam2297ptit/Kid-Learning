@@ -2,15 +2,17 @@ const config_api = require("../../../config/config").config_api;
 const utils = require("../../../utils/utils");
 const axios = require("axios");
 
-function getActivities(page, callback) {
+function getListQuiz(id, callback) {
     axios({
-        url: config_api.timeline + utils.getProjectId(),
+        url: config_api.list_quizz,
         method: "GET",
-        withCredentials: true,
         headers: {
             "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
         },
-        data: {},
+        params: {
+            subjectId: id,
+        },
     })
         .then(result => {
             return callback(false, result.data);
@@ -51,6 +53,6 @@ function getInfoProject(callback) {
 }
 
 module.exports = {
-    getActivities: getActivities,
+    getListQuiz: getListQuiz,
     getInfoProject: getInfoProject,
 };

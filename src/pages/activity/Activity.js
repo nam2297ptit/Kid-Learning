@@ -31,12 +31,13 @@ import {
     faArrowAltCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { CustomImg, LoadingSprinner, Description } from "../../components/CustomTag";
+import notifier from "simple-react-notifications";
 import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
 import cup_sliver from "../../assets/img/photos/cup-sliver.png";
 import cup_cu from "../../assets/img/photos/cup.png";
-
-// const api = require("./api/api");
+import camera from "../../assets/img/photos/camera.png";
+const api = require("./api/api");
 const utils = require("../../utils/utils");
 
 class Rank extends React.Component {
@@ -174,7 +175,18 @@ class Questions extends React.Component {
         super(props);
         this.state = {
             text: "",
-            data: [1, 2, 3],
+            data: [],
+            question: {
+                id: 1,
+                quizId: 1,
+                linkImage: null,
+                linkVideo: null,
+                content: "1",
+                result: ["A", "B", "F", "D"],
+                key: null,
+                solution: "1",
+                createdDate: "2019-11-30T15:04:07.624Z",
+            },
         }; // You can also pass a Quill Delta here
         this.handleChange = this.handleChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
@@ -190,10 +202,36 @@ class Questions extends React.Component {
         });
     }
 
+    handleCreate() {
+        let temp = [...this.state.data];
+        console.log(temp);
+        let question = {
+            id: 1,
+            quizId: 1,
+            linkImage: null,
+            linkVideo: null,
+            content: "1",
+            result: ["A", "B", "F", "D"],
+            key: null,
+            solution: "1",
+            createdDate: "2019-11-30T15:04:07.624Z",
+        };
+        temp.push(question);
+
+        this.setState({ data: temp });
+    }
+
     handleImageChange(event) {
+        //    let temp = Object.assign({}, this.state.temp);
+
+        //    temp[event.target.name] = event.target.value;
+        //    this.setState({
+        //        temp: temp,
+        //        tempLogo: event.target.value,
+        //    });
         this.setState({
-            changeLogo: event.target.files[0],
-            tempLogo: URL.createObjectURL(event.target.files[0]),
+            changeLogo: event.target.value,
+            tempLogo: event.target.value,
         });
     }
 
@@ -203,6 +241,7 @@ class Questions extends React.Component {
                 <CardHeader>
                     <CardTitle tag='h5' className='mb-0'>
                         Questions
+                        <Button className='float-right d-inline bg-success'>Save questions</Button>
                     </CardTitle>
                 </CardHeader>
                 <CardBody>
@@ -229,20 +268,20 @@ class Questions extends React.Component {
                                         <Col sm='12' md='4'>
                                             <Label>Ảnh câu hỏi</Label>
                                             <FormGroup>
+                                                <Input
+                                                    className='boder'
+                                                    type='text'
+                                                    name='file'
+                                                    id='logo_subject'
+                                                    placeholder='Url Image'
+                                                    onChange={this.handleImageChange}
+                                                />
                                                 <Label
                                                     for='logo_subject'
                                                     className='hover-pointer:hover d-flex justify-content-center my-auto'>
-                                                    <Input
-                                                        className='boder'
-                                                        type='file'
-                                                        name='file'
-                                                        id='logo_subject'
-                                                        hidden
-                                                        onChange={this.handleImageChange}
-                                                    />
                                                     <img
-                                                        alt='Avatar project'
-                                                        src={this.state.tempLogo || this.state.logo}
+                                                        alt='Img questions'
+                                                        src={this.state.tempLogo || camera}
                                                         className='img-thumbnail'
                                                         style={{
                                                             height: "200px",
@@ -368,8 +407,7 @@ class Questions extends React.Component {
                                                 block
                                                 color='none'
                                                 className='load-more mt-2 text-primary font-weight-bold'
-                                                //onClick={() => this.handerUpdate()}
-                                            >
+                                                onClick={this.handleCreate.bind(this)}>
                                                 <FontAwesomeIcon icon={faPlus} /> Thêm câu trả lời
                                             </Button>
                                         </Col>
@@ -384,8 +422,7 @@ class Questions extends React.Component {
                         block
                         color='primary'
                         className='load-more'
-                        //onClick={() => this.handerUpdate()}
-                    >
+                        onClick={this.handleCreate.bind(this)}>
                         <FontAwesomeIcon icon={faPlusCircle} /> Thêm câu hỏi
                     </Button>
                 </CardBody>
@@ -402,29 +439,20 @@ class Timeline extends React.Component {
             isLoaderAPI_InfoProject: false,
         };
     }
-    componentWillMount() {
+    componentDidMount() {
         const that = this;
-        // api.getActivities(1,(err, result)=>{
-        //   if(err){
-        //     Notification("error", "Error", err);
-        //   } else{
-        //     console.log(result);
+        api.getListQuiz(1, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                console.log(result);
 
-        //       that.setState({
-        //         dataTimeline: result,
-        //         isLoaderAPI_Activities: true
-        //     });
-        //   }
-        // })
-        // api.getInfoProject((err, result)=>{
-        //     if(err){
-        //       Notification("error", "Error", err);
-        //     } else{
-        //       that.setState({
-        //         dataInfoProject: result,
-        //         isLoaderAPI_InfoProject: true});
-        //     }
-        // })
+                that.setState({ data: result, isLoaderAPI: true });
+            }
+        });
+        // this.setState({
+        //     data: Data,
+        // });
     }
     render() {
         return (

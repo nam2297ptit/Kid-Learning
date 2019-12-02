@@ -7,6 +7,7 @@ import {
     CardBody,
     CardHeader,
     CardTitle,
+    CardFooter,
     Form,
     FormGroup,
     Label,
@@ -17,19 +18,40 @@ import {
     FormFeedback,
     CustomInput,
     Col,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
 } from "reactstrap";
-import { Phone, MessageSquare, User, Mail, Camera, MapPin, Users, Package } from "react-feather";
+import {
+    Phone,
+    MessageSquare,
+    User,
+    Mail,
+    Camera,
+    MapPin,
+    Users,
+    Package,
+    MoreHorizontal,
+} from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faLeaf } from "@fortawesome/free-solid-svg-icons";
+import notifier from "simple-react-notifications";
 import { CustomImg } from "../../../components/CustomTag";
 import { connect } from "react-redux";
 import "../Configuration.css";
 
 const api = require("../api/api");
+const utils = require("../../../utils/utils");
+const data_subject = {};
 class ProfDetails extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isDelete: false,
+            isEdit: false,
+            data: {},
+        };
         this.updateUser = this.updateUser.bind(this);
         this.toggle = this.toggle.bind(this);
         this.handleChangeAvatar = this.handleChangeAvatar.bind(this);
@@ -189,6 +211,50 @@ class ProfDetails extends Component {
         }));
     }
 
+    deleteSubject() {
+        this.setState({ isDelete: false });
+    }
+
+    saveEditSubject() {
+        let temp = Object.assign({}, this.state);
+        let id = utils.getInfoSubject().id;
+        api.editSubject(id, data_subject, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                temp.data = result;
+                temp.isEdit = false;
+                this.setState(temp);
+            }
+        });
+    }
+
+    handleChangeSubject(event) {
+        data_subject.name = event.target.value;
+    }
+
+    handleChangeImg(event) {
+        data_subject.image = event.target.value;
+    }
+
+    cancelEditSubject() {
+        let temp = Object.assign({}, this.state.data);
+        data_subject.name = temp.name;
+        data_subject.image = temp.image;
+        this.setState({ isEdit: false });
+    }
+    componentDidMount() {
+        const that = this;
+        let id = JSON.parse(localStorage.getItem("subject")).id;
+        api.getInfoSubject(id, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                that.setState({ data: result, isLoaderAPI: true });
+            }
+        });
+    }
+
     render() {
         const { submitted, new_pass, confirm_new_pass } = this.state;
         return (
@@ -196,11 +262,6 @@ class ProfDetails extends Component {
                 <CardHeader>
                     <CardTitle tag='h5' className='mb-0 '>
                         Subject Configuration{/* {this.state.checkMainAcc === "" && ( */}
-                        <FontAwesomeIcon
-                            icon={faEdit}
-                            className='float-right Profile__pointer'
-                            onClick={this.toggle}
-                        />
                         {/* )} */}
                     </CardTitle>
                 </CardHeader>
@@ -409,20 +470,77 @@ class ProfDetails extends Component {
                     </Form>
                 </Modal>
 
-                <CardBody className='text-center'>
+                {/* modal delete subject */}
+                <Modal isOpen={this.state.isDelete}>
+                    <ModalBody tag='h4'>Do you want to delete this Subject ?</ModalBody>
+                    <ModalFooter>
+                        <Button color='primary' onClick={this.deleteSubject.bind(this)}>
+                            {" "}
+                            Sure
+                        </Button>{" "}
+                        <Button
+                            color='secondary'
+                            onClick={event => this.setState({ isDelete: false })}>
+                            Cancel
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+
+                <CardBody>
                     {/* {!this.state.isLoadedImg ? (
                         <LoadingSprinner />
                     ) : ( */}
-                    <CustomImg
-                        src='https://anhdephd.com/wp-content/uploads/2017/05/hinh-nen-phim-angry-bird-dep-nhat-585x390.jpg'
-                        className='img-responsive mb-2 img-fluid'
-                    />
-                    {/* )} */}
-                    <CardTitle className='text-center'>
-                        <strong>
-                            <div>Tiếng anh lớp 6</div>
-                        </strong>
-                    </CardTitle>
+                    {!this.state.isEdit ? (
+                        <React.Fragment>
+                            <CustomImg
+                                src={this.state.data.image}
+                                className='img-responsive mb-2 img-fluid'
+                            />
+                            {/* )} */}
+                            <CardTitle className='text-center'>
+                                <strong>
+                                    <div>{this.state.data.name}</div>
+                                </strong>
+                            </CardTitle>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <Card>
+                                <CardBody>
+                                    <Label className='font-weight-bold'> Subject: </Label>
+                                    <Input
+                                        name='subject'
+                                        onChange={this.handleChangeSubject.bind(this)}
+                                        type='text'
+                                        placeholder='input text'
+                                        defaultValue={this.state.data.name}
+                                    />
+                                    <Label className='mt-1 font-weight-bold'>Image: </Label>
+                                    <Input
+                                        name='img'
+                                        onChange={this.handleChangeImg.bind(this)}
+                                        type='text'
+                                        placeholder='imput url image'
+                                        defaultValue={this.state.data.image}
+                                    />
+                                </CardBody>
+                                <CardFooter className='d-flex justify-content-end'>
+                                    <Button
+                                        color='success'
+                                        className='mr-1'
+                                        onClick={this.saveEditSubject.bind(this)}>
+                                        {" "}
+                                        Save
+                                    </Button>
+                                    <Button
+                                        color='secondary'
+                                        onClick={this.cancelEditSubject.bind(this)}>
+                                        Cancel
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </React.Fragment>
+                    )}
                 </CardBody>
 
                 <hr />
@@ -472,9 +590,21 @@ class ProfDetails extends Component {
                             </li>
                         </div>
                     </ul>
-                    <hr />
-                    <MessageSquare width={14} height={14} className='mr-1' /> Introduce:
                 </CardBody>
+                <CardFooter>
+                    <Button
+                        className='width-percent-45'
+                        color='primary'
+                        onClick={event => this.setState({ isEdit: true })}>
+                        <FontAwesomeIcon icon={faEdit} /> Edit Quiz
+                    </Button>{" "}
+                    <Button
+                        className='width-percent-45'
+                        color='danger'
+                        onClick={event => this.setState({ isDelete: true })}>
+                        <FontAwesomeIcon icon={faTrash} /> Delete Quiz
+                    </Button>
+                </CardFooter>
             </Card>
         );
     }
