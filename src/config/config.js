@@ -11,6 +11,9 @@ const config_api = {
     subject: {
         list_subject: api_path + "subject",
     },
+    quizz: {
+        list_quizz: api_path + "quiz",
+    },
 };
 
 module.exports = {

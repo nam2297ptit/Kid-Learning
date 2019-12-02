@@ -1,16 +1,18 @@
-const config_api = require("../../../config/config").config_api.subject;
+const config_api = require("../../../config/config").config_api.quizz;
 const utils = require("../../../utils/utils");
 const axios = require("axios");
 
-function getListSubject(callback) {
+function getListQuiz(id, callback) {
     axios({
-        url: config_api.list_subject,
+        url: config_api.list_quizz,
         method: "GET",
         headers: {
             "Content-type": "application/json",
             authorization: "Bearer " + localStorage.getItem("token"),
         },
-        data: {},
+        params: {
+            subjectId: id,
+        },
     })
         .then(result => {
             return callback(false, result.data);
@@ -58,18 +60,20 @@ function getInfoSubject(id, callback) {
         });
 }
 
-function createSubject(data, callback) {
+function createQuiz(data, callback) {
+    console.log(data);
+
     axios({
-        url: config_api.list_subject,
+        url: config_api.list_quizz,
         method: "POST",
         headers: {
             "Content-type": "application/json",
             authorization: "Bearer " + localStorage.getItem("token"),
         },
         data: {
+            subjectId: JSON.parse(localStorage.getItem("subject")).id,
             name: data.name,
-            description: data.description,
-            image: data.file,
+            timeTest: data.time,
         },
     })
         .then(result => {
@@ -113,8 +117,8 @@ function getRoleInProject(id, callback) {
 }
 
 module.exports = {
-    getListSubject: getListSubject,
+    getListQuiz: getListQuiz,
     getInfoSubject: getInfoSubject,
-    createSubject: createSubject,
+    createQuiz: createQuiz,
     getRoleInProject: getRoleInProject,
 };

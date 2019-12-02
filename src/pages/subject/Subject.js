@@ -51,7 +51,7 @@ class Project extends React.Component {
             temp: {
                 name: "",
                 description: "",
-                file: {},
+                file: "",
             },
             submitted: false,
             isLoaderAPI: false,
@@ -71,25 +71,16 @@ class Project extends React.Component {
     }
 
     handleSelectSubject() {
-        // api.getInfoProject(this.state.data.id, (err, result) => {
-        //     if (err) {
-        //         Notification(
-        //             "error",
-        //             "Error",
-        //             err.data === undefined ? err : err.data._error_message,
-        //         );
-        //     } else {
-        //         const { id, i_am_owner, i_am_admin, i_am_member } = result;
-        //         let project = {
-        //             id: id,
-        //             i_am_owner: i_am_owner,
-        //             i_am_admin: i_am_admin,
-        //             i_am_member: i_am_member,
-        //         };
-        //         sessionStorage.setItem("project", JSON.stringify(project));
-        //         window.location.replace("/project/work");
-        //     }
-        // });
+        api.getInfoSubject(this.state.hover + 1, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                console.log(result);
+
+                localStorage.setItem("subject", JSON.stringify(result));
+                // window.location.replace("/project/work");
+            }
+        });
     }
 
     handleChange(event) {
@@ -161,8 +152,6 @@ class Project extends React.Component {
         const that = this;
         api.getListSubject((err, result) => {
             if (err) {
-                console.log(err);
-
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
                 that.setState({ data: result, isLoaderAPI: true });
@@ -195,16 +184,16 @@ class Project extends React.Component {
         ) : (
             <React.Fragment>
                 <Modal isOpen={this.state.showModal.create_project} className='modal-project'>
-                    <ModalHeader className='modal-project__header'>Tạo môn học</ModalHeader>
+                    <ModalHeader className='modal-project__header'>Create Subject</ModalHeader>
                     <ModalBody>
                         <Row>
                             <Col>
                                 <FormGroup>
-                                    <Label for='name_of_project'>Tên môn học</Label>
+                                    <Label for='name_of_project'>Subject Name</Label>
                                     <Input
                                         type='text'
                                         name='name'
-                                        placeholder='Điền tên môn học vào đây'
+                                        placeholder='subject name'
                                         value={this.state.temp.name}
                                         onChange={this.handleChange}
                                         invalid={
@@ -215,7 +204,7 @@ class Project extends React.Component {
                                         onKeyPress={this.handleKeyPress.bind(this)}
                                     />
                                     <FormFeedback invalid>
-                                        Name subject is a required field!
+                                        Subject name is a required field!
                                     </FormFeedback>
                                 </FormGroup>
                                 <FormGroup>
@@ -224,7 +213,7 @@ class Project extends React.Component {
                                         type='textarea'
                                         rows='5'
                                         name='description'
-                                        placeholder='Mô tả'
+                                        placeholder='description'
                                         value={this.state.temp.description}
                                         onChange={this.handleChange}
                                         onKeyPress={this.handleKeyPress.bind(this)}
@@ -239,7 +228,7 @@ class Project extends React.Component {
                                         type='text'
                                         name='file'
                                         id='logo_subject'
-                                        placeholder='Thêm đường dẫn ảnh vào đây'
+                                        placeholder='Url Image'
                                         onChange={this.handleImageChange}
                                     />
                                     <Label
@@ -268,19 +257,19 @@ class Project extends React.Component {
                     </ModalFooter>
                 </Modal>
 
-                <Container fluid className='width-percent-60 w-75'>
+                <Container fluid className='width-percent-60 w-75 '>
                     <Row>
                         <Col xs='4'>
                             <Input
                                 className='width-percent-40'
                                 id='inputSearch'
-                                placeholder='Tìm kiếm tên môn học'
+                                placeholder='Search subject'
                                 onKeyUp={this.handleSearch.bind(this)}
                             />
                         </Col>
                         <Col>
                             <Button className='float-right' onClick={this.handleShow.bind(this)}>
-                                <FontAwesomeIcon icon={faPlus} /> Tạo môn học
+                                <FontAwesomeIcon icon={faPlus} /> Create Subject
                             </Button>
                         </Col>
                     </Row>
@@ -290,6 +279,7 @@ class Project extends React.Component {
                                 <Col md='2' sm='12' className='mr-2'>
                                     <Link
                                         to='/quiz'
+                                        replace='true'
                                         onClick={this.handleSelectSubject.bind(this)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
                                         <Card
@@ -311,14 +301,14 @@ class Project extends React.Component {
                                                         {item.name || "Subject"}
                                                     </h3>
                                                 </CardTitle>
-                                                <h6 className='text-center font-weight-bold text-mute'>
+                                                {/* <h6 className='text-center font-weight-bold text-mute'>
                                                     {"Description: " + item.description}
-                                                </h6>
+                                                </h6> */}
                                                 <h6 className='text-center font-weight-bold text-mute'>
                                                     {"Created : " +
                                                         moment
                                                             .utc(item.createdDate)
-                                                            .format("DD MMM YYYY hh:mm")}
+                                                            .format("DD/MM/YYYY")}
                                                 </h6>
                                             </CardBody>
                                         </Card>

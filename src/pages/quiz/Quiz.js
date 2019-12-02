@@ -19,16 +19,21 @@ import {
     DropdownToggle,
     DropdownItem,
     DropdownMenu,
+    FormGroup,
+    FormFeedback,
 } from "reactstrap";
 import { MoreHorizontal, Save } from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import avatar from "../../assets/img/avatars/avatar-2.jpg";
 import { CustomImg } from "../../components/CustomTag";
-import moment from "moment";
 import Data from "./Data.json";
 import { Link } from "react-router-dom";
+import notifier from "simple-react-notifications";
+
 const ValidInput = require("../../utils/utils");
+const api = require("./api/api");
 
 class TableQuiz extends Component {
     constructor(props) {
@@ -117,15 +122,10 @@ class TableQuiz extends Component {
                         }
                         onMouseOver={() => this.setState({ hover: this.props.index })}
                         onMouseLeave={() => this.setState({ hover: null })}>
-                        {/* <CustomImg
-                            className='img--user--square-3x img-fluid ml-3  mt-4 mr-4 rounded-circle'
-                            src={avatar}
-                            alt='avt'
-                        /> */}
                         <div
                             className='rounded-circle bg-primary mt-4 mb-3 ml-3 mr-3'
                             style={{ height: "50px", width: "50px" }}>
-                            <h1 className='ml-3 mt-2 text-white'>1</h1>
+                            <h1 className='ml-3 mt-2 text-white'>{this.props.index + 1}</h1>
                         </div>
                         <CardTitle className=' full-width mb-0 font-size-3x font-weight-bold text-color-black mt-0 border-bottom-0 '>
                             <Row>
@@ -138,10 +138,13 @@ class TableQuiz extends Component {
                                             <div>{this.state.data.name}</div>
                                         </div>
                                         <h6 className='text-muted mt-2'>
-                                            Created date: {this.state.data.creat_date}
+                                            Created date:{" "}
+                                            {moment
+                                                .utc(this.state.data.createdDate)
+                                                .format("DD/MM/YYYY")}
                                         </h6>
                                         <h6 className='text-muted'>
-                                            Total questions: {this.state.data.total_question}
+                                            Total questions: {this.state.data.questionNumber}
                                         </h6>
                                     </Link>
                                 </Col>
@@ -182,14 +185,28 @@ class Quiz extends Component {
         this.state = {
             isClose: false,
             data: [],
+            temp: {
+                name: "",
+                time: "",
+            },
             keyWord: null,
         };
     }
 
     componentDidMount() {
-        this.setState({
-            data: Data,
+        const that = this;
+        api.getListQuiz(1, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                console.log(result);
+
+                that.setState({ data: result, isLoaderAPI: true });
+            }
         });
+        // this.setState({
+        //     data: Data,
+        // });
     }
 
     handleSearch(event) {
@@ -203,23 +220,37 @@ class Quiz extends Component {
     }
 
     handleChange(event) {
-        console.log("event:", event.target.name);
-        let temp = Object.assign({}, this.state.data);
-        temp.tag = event.target.value;
-        console.log("tag:", temp.tag);
-        //this.setState({ data: temp });
+        let temp = Object.assign({}, this.state.temp);
+        temp[event.target.name] = event.target.value;
+        this.setState({ temp: temp });
     }
-
-    handleChangeSubject(event) {
-        let temp = Object.assign({}, this.state.data);
-        temp.name = event.target.value;
-        console.log("subject:", temp.name);
-        //this.setState({ data: temp });
+    handleClose() {
+        let state = Object.assign({}, this.state);
+        state.submitted = false;
+        state.temp.name = "";
+        state.temp.time = "";
+        state.showModal.create_project = false;
+        this.setState(state);
     }
-
-    saveQuiz() {
-        this.setState({
-            isClose: false,
+    createQuiz() {
+        const that = this;
+        let state = Object.assign({}, this.state);
+        this.setState({ submitted: true });
+        const { name } = this.state.temp;
+        if (!name) {
+            return;
+        }
+        api.createQuiz(state.temp, (err, result) => {
+            if (err) {
+                this.setState({
+                    loading: false,
+                });
+                that.setState({ isClose: false });
+            } else {
+                state.data.push(result);
+                that.setState(state);
+                that.setState({ isClose: false });
+            }
         });
     }
 
@@ -229,28 +260,47 @@ class Quiz extends Component {
                 <Modal isOpen={this.state.isClose}>
                     <ModalHeader className='d-flex justify-content-center'>Create Quiz</ModalHeader>
                     <ModalBody>
-                        <Label> Subject </Label>
+                        <FormGroup>
+                            <Label for='name_of_project'>Quiz Name</Label>
+                            <Input
+                                name='name'
+                                onChange={this.handleChange.bind(this)}
+                                type='text'
+                                placeholder='Name Quiz'
+                                invalid={
+                                    this.state.submitted && !this.state.temp.name ? true : false
+                                }
+                            />
+                            <FormFeedback invalid>Quiz name is a required field!</FormFeedback>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for='name_of_project'>Subject Name</Label>
+                            <Input
+                                name='time'
+                                type='number'
+                                id={"tasks-input-status-new"}
+                                onChange={this.handleChange.bind(this)}
+                                placeholder='Test time'
+                                invalid={
+                                    this.state.submitted && !this.state.temp.time ? true : false
+                                }
+                            />
+                            <FormFeedback invalid>Time is a required field!</FormFeedback>
+                        </FormGroup>
+
+                        {/* <Label className='mt-1'>Test time</Label>
                         <Input
-                            name='subject'
-                            onChange={this.handleChangeSubject.bind(this)}
-                            type='text'
-                        />
-                        <Label className='mt-1'>Tags</Label>
-                        <Input
-                            name='tag'
-                            type='select'
+                            name='time'
+                            type='number'
                             id={"tasks-input-status-new"}
-                            onChange={this.handleChange.bind(this)}>
-                            <option>project1</option>
-                            <option>project2</option>
-                            <option>project3</option>
-                        </Input>
+                            onChange={this.handleChange.bind(this)}
+                            placeholder='Test time'></Input> */}
                     </ModalBody>
                     <ModalFooter>
                         <Button color='secondary' onClick={() => this.setState({ isClose: false })}>
                             Cancel
                         </Button>
-                        <Button color='success' onClick={this.saveQuiz.bind(this)}>
+                        <Button color='success' onClick={this.createQuiz.bind(this)}>
                             Save
                         </Button>
                     </ModalFooter>
@@ -262,7 +312,7 @@ class Quiz extends Component {
                             <Input
                                 className='width-percent-40'
                                 id='inputSearch'
-                                placeholder='Search Project'
+                                placeholder='Search Quiz'
                                 onKeyUp={this.handleSearch.bind(this)}
                             />
                         </Col>
