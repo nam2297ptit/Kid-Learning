@@ -40,7 +40,6 @@ import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
 import cup_sliver from "../../assets/img/photos/cup-sliver.png";
 import cup_cu from "../../assets/img/photos/cup.png";
-import { isEmpty } from "../../utils/utils";
 const api = require("./api/api");
 const utils = require("../../utils/utils");
 
@@ -176,6 +175,8 @@ class Information extends React.Component {
 
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
+                console.log(result);
+
                 that.setState({
                     data: result,
                 });
@@ -302,6 +303,8 @@ class Questions extends React.Component {
             lenght_data: null,
             data: [],
             question: {
+                subjectId: null,
+                quizId: null,
                 linkImage: null,
                 linkVideo: null,
                 content: null,
@@ -355,9 +358,9 @@ class Questions extends React.Component {
         this.setState({ data: temp, isSave: true });
     }
 
-    handleSave(content) {
+    handleSave(event) {
         let temp = Object.assign({}, this.state.question);
-        temp["content"] = content;
+        temp["content"] = event.target.value;
         this.setState({ question: temp });
     }
 
@@ -372,8 +375,9 @@ class Questions extends React.Component {
             } else {
                 let data = [...this.state.data];
                 data[data.length - 1] = result;
-
                 let question = {
+                    subjectId: null,
+                    quizId: null,
                     linkImage: null,
                     linkVideo: null,
                     content: null,
@@ -385,7 +389,7 @@ class Questions extends React.Component {
                     isSave: false,
                     question: question,
                     tempLogo: null,
-                    lenght_data: this.props.questions.length,
+                    lenght_data: this.state.lenght_data + 1,
                     data: data,
                 });
             }
@@ -410,15 +414,17 @@ class Questions extends React.Component {
         this.setState({ data: data, question: question });
     }
 
-    removeQuiz(index) {
+    removeQuestion(index) {
         const that = this;
         let data = [...this.state.data];
         api.deleteQuestion(data[index].id, (err, result) => {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
-                delete data[index];
-                this.setState({ data: data });
+                console.log(result);
+
+                data.pop();
+                this.setState({ data: data, lenght_data: this.state.lenght_data - 1 });
             }
         });
     }
@@ -438,6 +444,8 @@ class Questions extends React.Component {
                 <CardBody>
                     {/*  */}
                     {this.state.data.map((item, i) => {
+                        console.log(item);
+
                         return (
                             <Card color='success' outline>
                                 <CardHeader>
@@ -455,7 +463,7 @@ class Questions extends React.Component {
                                         <Button
                                             color='none'
                                             className='close d-inline '
-                                            onClick={this.removeQuiz.bind(this, i)}>
+                                            onClick={this.removeQuestion.bind(this, i)}>
                                             <FontAwesomeIcon icon={faTrash} color='red' />
                                         </Button>
                                     )}
@@ -463,29 +471,20 @@ class Questions extends React.Component {
                                 <CardBody>
                                     <Label>Nội dung câu hỏi:</Label>
                                     {i < this.state.lenght_data ? (
-                                        <div
-                                            className='overflow-y-20x border min-height-0.5x cursor-pointer scrollbar-style-1 scrollbar-width-1x'
-                                            onClick={this.toggle.bind(this, "edit")}>
-                                            <div
-                                                className='p-2'
-                                                dangerouslySetInnerHTML={{
-                                                    __html: utils.returnThisWhenNull(
-                                                        item.content ||
-                                                            (isEmpty(
-                                                                this.state.question.content,
-                                                            ) === true
-                                                                ? "Điền nội dung câu hỏi vào đây...."
-                                                                : this.state.question.content),
-                                                    ),
-                                                }}
-                                            />
-                                        </div>
-                                    ) : (
-                                        <Description
-                                            handleSave={this.handleSave}
-                                            description={
-                                                item.content || this.state.question.content
+                                        <Input
+                                            type='textarea'
+                                            value={
+                                                utils.isEmpty(item.content) === true
+                                                    ? null
+                                                    : item.content
                                             }
+                                            disabled
+                                        />
+                                    ) : (
+                                        <Input
+                                            onChange={this.handleSave}
+                                            type='textarea'
+                                            value={item.content || this.state.question.content}
                                         />
                                     )}
 
@@ -657,19 +656,17 @@ class Timeline extends React.Component {
             statistical: {},
             data: {},
         };
+        this.getAPI = this.getAPI.bind(this);
     }
-    componentDidMount() {
-        const that = this;
+    getAPI() {
         let id = JSON.parse(localStorage.getItem("quiz"));
-
+        const that = this;
         api.getListQuiz(id, (err, result) => {
             if (err) {
                 console.log(err);
 
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
-                console.log(result);
-
                 that.setState({
                     data: result,
                     questions: result.questionArray,
@@ -678,6 +675,9 @@ class Timeline extends React.Component {
                 });
             }
         });
+    }
+    componentDidMount() {
+        this.getAPI();
     }
     render() {
         return !this.state.isLoaderAPI ? (
@@ -700,7 +700,7 @@ class Timeline extends React.Component {
                 </Card>
                 <Row>
                     <Col md='7' xl='8'>
-                        <Questions questions={this.state.questions} />
+                        <Questions questions={this.state.questions} getAPI={this.getAPI} />
                     </Col>
                     <Col md='5' xl='4'>
                         <Information informartion={this.state.data} />
