@@ -127,7 +127,7 @@ class Sidebar extends React.Component {
                             </Link>
 
                             <h4 className='font-weight-bold  m-auto text-center text-primary d-inline mb-4 '>
-                                Tiếng anh lớp 6
+                                {JSON.parse(localStorage.getItem("subject")).name}
                             </h4>
                         </media>
                     </div>

@@ -40,6 +40,7 @@ import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
 import cup_sliver from "../../assets/img/photos/cup-sliver.png";
 import cup_cu from "../../assets/img/photos/cup.png";
+import { isEmpty } from "../../utils/utils";
 const api = require("./api/api");
 const utils = require("../../utils/utils");
 
@@ -175,8 +176,6 @@ class Information extends React.Component {
 
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
-                console.log(result);
-
                 that.setState({
                     data: result,
                 });
@@ -303,11 +302,9 @@ class Questions extends React.Component {
             lenght_data: null,
             data: [],
             question: {
-                subjectId: null,
-                quizId: null,
                 linkImage: null,
                 linkVideo: null,
-                content: "",
+                content: null,
                 result: [],
                 key: null,
                 solution: null,
@@ -366,7 +363,6 @@ class Questions extends React.Component {
 
     handleSaveQuestion() {
         let question = Object.assign({}, this.state.question);
-
         const that = this;
         api.createQuestion(question, (err, result) => {
             if (err) {
@@ -374,9 +370,10 @@ class Questions extends React.Component {
 
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
+                let data = [...this.state.data];
+                data[data.length - 1] = result;
+
                 let question = {
-                    subjectId: null,
-                    quizId: null,
                     linkImage: null,
                     linkVideo: null,
                     content: null,
@@ -388,6 +385,8 @@ class Questions extends React.Component {
                     isSave: false,
                     question: question,
                     tempLogo: null,
+                    lenght_data: this.props.questions.length,
+                    data: data,
                 });
             }
         });
@@ -471,8 +470,12 @@ class Questions extends React.Component {
                                                 className='p-2'
                                                 dangerouslySetInnerHTML={{
                                                     __html: utils.returnThisWhenNull(
-                                                        item.content || this.state.question.content,
-                                                        "Điền nội dung câu hỏi vào đây....",
+                                                        item.content ||
+                                                            (isEmpty(
+                                                                this.state.question.content,
+                                                            ) === true
+                                                                ? "Điền nội dung câu hỏi vào đây...."
+                                                                : this.state.question.content),
                                                     ),
                                                 }}
                                             />
