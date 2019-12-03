@@ -56,8 +56,8 @@ export class SearchBox extends React.Component {
 }
 
 let quill_icons = Quill.import("ui/icons");
-quill_icons["save"] = '<i class="fa fa-save" aria-hidden="true"></i>';
-quill_icons["close"] = '<i class="fa fa-window-close" aria-hidden="true"></i>';
+quill_icons["save"] = '<i class="fa fa-save text-primary" aria-hidden="true"></i>';
+quill_icons["close"] = '<i class="fa fa-window-close text-danger" aria-hidden="true"></i>';
 
 export class Description extends React.Component {
     constructor(props) {

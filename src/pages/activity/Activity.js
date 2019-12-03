@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Notification from "../../components/Notification";
 import moment from "moment";
 import {
     Container,
@@ -33,16 +32,14 @@ import {
     faTrash,
     faArrowAltCircleLeft,
     faEdit,
-    faTrashRestore,
 } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from "react-loading";
-import { CustomImg, LoadingSprinner, Description } from "../../components/CustomTag";
+import { CustomImg, Description } from "../../components/CustomTag";
 import notifier from "simple-react-notifications";
 import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
 import cup_sliver from "../../assets/img/photos/cup-sliver.png";
 import cup_cu from "../../assets/img/photos/cup.png";
-import camera from "../../assets/img/photos/camera.png";
 const api = require("./api/api");
 const utils = require("../../utils/utils");
 
