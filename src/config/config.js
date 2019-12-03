@@ -14,6 +14,10 @@ const config_api = {
     quizz: {
         list_quizz: api_path + "quiz",
     },
+    questions: {
+        list_quizz: api_path + "quiz",
+        questions: api_path + "question",
+    },
 };
 
 module.exports = {

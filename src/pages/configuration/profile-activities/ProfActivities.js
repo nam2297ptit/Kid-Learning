@@ -73,20 +73,7 @@ class ProfActivities extends Component {
                             TimeLine
                         </NavLink>
                     </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({ active: this.state.activeTab === "project" })}
-                            onClick={this.toggle.bind(this, "project")}>
-                            Project
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({ active: this.state.activeTab === "watched" })}
-                            onClick={this.toggle.bind(this, "watched")}>
-                            Watched
-                        </NavLink>
-                    </NavItem>
+
                     <NavItem>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === "contact" })}

@@ -78,7 +78,7 @@ class Project extends React.Component {
                 console.log(result);
 
                 localStorage.setItem("subject", JSON.stringify(result));
-                // window.location.replace("/project/work");
+                window.location.replace("/quiz");
             }
         });
     }
@@ -158,13 +158,6 @@ class Project extends React.Component {
             }
         });
     }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (this.state === nextState) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
 
     handleImageChange(event) {
         let temp = Object.assign({}, this.state.temp);
@@ -278,7 +271,7 @@ class Project extends React.Component {
                             return (
                                 <Col md='2' sm='12' className='mr-2'>
                                     <Link
-                                        to='/quiz'
+                                        to='#'
                                         replace='true'
                                         onClick={this.handleSelectSubject.bind(this, item.id)}
                                         className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>

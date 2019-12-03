@@ -42,7 +42,7 @@ class TableQuiz extends Component {
         this.state = {
             hover: false,
             data: this.props.data,
-            isEdit: false,
+            // isEdit: false,
         };
         this.handleSelectQuiz = this.handleSelectQuiz.bind(this);
     }
@@ -53,71 +53,48 @@ class TableQuiz extends Component {
         this.setState({ data: temp });
     }
 
-    saveQuiz() {
-        this.setState({ isEdit: false });
-    }
+    // saveQuiz() {
+    //     this.setState({ isEdit: false });
+    // }
 
-    handleEdit(event) {
-        let temp = Object.assign({}, this.state.data);
-        temp.name = event.target.value;
-        console.log("subject:", temp.name);
-        //this.setState({ data: temp });
-    }
+    // handleEdit(event) {
+    //     let temp = Object.assign({}, this.state.data);
+    //     temp.name = event.target.value;
+    //     console.log("subject:", temp.name);
+    //     //this.setState({ data: temp });
+    // }
 
     handleSelectQuiz(id) {
         localStorage.setItem("quiz", id);
+        window.location.replace("/activity");
     }
 
     render() {
         return (
             <React.Fragment>
-                <Modal isOpen={this.state.isEdit}>
-                    <ModalHeader className='d-flex justify-content-center'>Edit Quiz</ModalHeader>
-                    <ModalBody>
-                        <Label> Name Quiz </Label>
-                        <Input
-                            name='subject'
-                            onChange={this.handleEdit.bind(this)}
-                            type='text'
-                            value={this.state.data.name}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color='secondary' onClick={() => this.setState({ isEdit: false })}>
-                            Cancel
-                        </Button>
-                        <Button color='success' onClick={this.saveQuiz.bind(this)}>
-                            Save
-                        </Button>
-                    </ModalFooter>
-                </Modal>
-
                 <Container fluid className='table-project mt-1 pr-0'>
-                    <Card
-                        className='d-flex flex-row quiz__card__header'
-                        style={
-                            this.state.hover === this.props.index
-                                ? { "background-color": "#b3d1ff" }
-                                : null
-                        }
-                        onMouseOver={() => this.setState({ hover: this.props.index })}
-                        onMouseLeave={() => this.setState({ hover: null })}>
-                        <div
-                            className='rounded-circle bg-primary mt-4 mb-3 ml-3 mr-3'
-                            style={{ height: "50px", width: "50px" }}>
-                            <h1 className='ml-3 mt-2 text-white'>{this.props.index + 1}</h1>
-                        </div>
-                        <CardTitle className=' full-width mb-0 font-size-3x font-weight-bold text-color-black mt-0 border-bottom-0 '>
-                            <Row>
-                                <Col xs='11'>
-                                    <Link
-                                        to='/activity'
-                                        replace='true'
-                                        onClick={this.handleSelectQuiz.bind(
-                                            this,
-                                            this.state.data.id,
-                                        )}
-                                        className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
+                    <Link
+                        to='#'
+                        replace='true'
+                        onClick={this.handleSelectQuiz.bind(this, this.state.data.id)}
+                        className='hover-pointer:hover text-decoration-none overflow-hidden position-relative'>
+                        <Card
+                            className='d-flex flex-row quiz__card__header'
+                            style={
+                                this.state.hover === this.props.index
+                                    ? { "background-color": "#b3d1ff" }
+                                    : null
+                            }
+                            onMouseOver={() => this.setState({ hover: this.props.index })}
+                            onMouseLeave={() => this.setState({ hover: null })}>
+                            <div
+                                className='rounded-circle bg-primary mt-4 mb-3 ml-3 mr-3'
+                                style={{ height: "50px", width: "50px" }}>
+                                <h1 className='ml-3 mt-2 text-white'>{this.props.index + 1}</h1>
+                            </div>
+                            <CardTitle className=' full-width mb-0 font-size-3x font-weight-bold text-color-black mt-0 border-bottom-0 '>
+                                <Row>
+                                    <Col xs='11'>
                                         <div className='d-flex justify-content-between mt-2'>
                                             <div>{this.state.data.name}</div>
                                         </div>
@@ -130,33 +107,11 @@ class TableQuiz extends Component {
                                         <h6 className='text-muted'>
                                             Total questions: {this.state.data.questionNumber}
                                         </h6>
-                                    </Link>
-                                </Col>
-                                <Col xs='1'>
-                                    <UncontrolledDropdown className='float-right mr-2'>
-                                        <DropdownToggle tag='a'>
-                                            <MoreHorizontal />
-                                        </DropdownToggle>
-                                        <DropdownMenu right c>
-                                            <DropdownItem
-                                                onClick={event => this.setState({ isEdit: true })}>
-                                                {"   "}
-                                                <FontAwesomeIcon icon={faEdit} /> Edit Quiz
-                                            </DropdownItem>
-                                            <DropdownItem>
-                                                <FontAwesomeIcon
-                                                    icon={faTrash}
-                                                    className='text-danger'
-                                                />
-                                                {"   "}
-                                                Delete Quiz
-                                            </DropdownItem>
-                                        </DropdownMenu>
-                                    </UncontrolledDropdown>
-                                </Col>
-                            </Row>
-                        </CardTitle>
-                    </Card>
+                                    </Col>
+                                </Row>
+                            </CardTitle>
+                        </Card>
+                    </Link>
                 </Container>
             </React.Fragment>
         );

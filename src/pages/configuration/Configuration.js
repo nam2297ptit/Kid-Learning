@@ -3,7 +3,7 @@ import Notification from "../../components/Notification";
 import { Col, Container, Row } from "reactstrap";
 import LoadingSprinner from "../../components/LoadingSprinner";
 import SubjectDetails from "./SubjectDetails/SubjectDetails";
-import ProfActivities from "./profile-activities/Timeline";
+import ProfActivities from "./profile-activities/ProfActivities";
 import { isEmpty } from "../../utils/ValidInput";
 import Page404 from "../auth/Page404";
 const api = require("./api/api");

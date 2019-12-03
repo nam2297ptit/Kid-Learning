@@ -18,28 +18,16 @@ import {
     FormFeedback,
     CustomInput,
     Col,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
 } from "reactstrap";
-import {
-    Phone,
-    MessageSquare,
-    User,
-    Mail,
-    Camera,
-    MapPin,
-    Users,
-    Package,
-    MoreHorizontal,
-} from "react-feather";
+import { Phone, User, Camera, Book, Clock } from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faLeaf } from "@fortawesome/free-solid-svg-icons";
 import notifier from "simple-react-notifications";
 import { CustomImg } from "../../../components/CustomTag";
 import { connect } from "react-redux";
 import "../Configuration.css";
+import moment from "moment";
+import ReactLoading from "react-loading";
 
 const api = require("../api/api");
 const utils = require("../../../utils/utils");
@@ -213,6 +201,13 @@ class ProfDetails extends Component {
 
     deleteSubject() {
         this.setState({ isDelete: false });
+        api.deleteSubject(this.state.data, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                window.location.replace("/subject");
+            }
+        });
     }
 
     saveEditSubject() {
@@ -257,7 +252,11 @@ class ProfDetails extends Component {
 
     render() {
         const { submitted, new_pass, confirm_new_pass } = this.state;
-        return (
+        return !this.state.isLoaderAPI === true ? (
+            <center>
+                <ReactLoading type='bars' color='black' />
+            </center>
+        ) : (
             <Card>
                 <CardHeader>
                     <CardTitle tag='h5' className='mb-0 '>
@@ -474,19 +473,19 @@ class ProfDetails extends Component {
                 <Modal isOpen={this.state.isDelete}>
                     <ModalBody tag='h4'>Do you want to delete this Subject ?</ModalBody>
                     <ModalFooter>
-                        <Button color='primary' onClick={this.deleteSubject.bind(this)}>
-                            {" "}
-                            Sure
-                        </Button>{" "}
                         <Button
                             color='secondary'
                             onClick={event => this.setState({ isDelete: false })}>
                             Cancel
                         </Button>
+                        <Button color='primary' onClick={this.deleteSubject.bind(this)}>
+                            {" "}
+                            Sure
+                        </Button>{" "}
                     </ModalFooter>
                 </Modal>
 
-                <CardBody>
+                <CardBody className='pb-0'>
                     {/* {!this.state.isLoadedImg ? (
                         <LoadingSprinner />
                     ) : ( */}
@@ -494,13 +493,11 @@ class ProfDetails extends Component {
                         <React.Fragment>
                             <CustomImg
                                 src={this.state.data.image}
-                                className='img-responsive mb-2 img-fluid'
+                                className='img-responsive mb-3 img-fluid'
                             />
                             {/* )} */}
-                            <CardTitle className='text-center'>
-                                <strong>
-                                    <div>{this.state.data.name}</div>
-                                </strong>
+                            <CardTitle className='text-center font-weight-bold mb-0'>
+                                <h1>{this.state.data.name}</h1>
                             </CardTitle>
                         </React.Fragment>
                     ) : (
@@ -526,16 +523,16 @@ class ProfDetails extends Component {
                                 </CardBody>
                                 <CardFooter className='d-flex justify-content-end'>
                                     <Button
-                                        color='success'
+                                        color='secondary'
                                         className='mr-1'
+                                        onClick={this.cancelEditSubject.bind(this)}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        color='success'
                                         onClick={this.saveEditSubject.bind(this)}>
                                         {" "}
                                         Save
-                                    </Button>
-                                    <Button
-                                        color='secondary'
-                                        onClick={this.cancelEditSubject.bind(this)}>
-                                        Cancel
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -550,59 +547,37 @@ class ProfDetails extends Component {
                     <ul className='list-unstyled mb-0'>
                         <div>
                             <li className='mb-1'>
-                                <Mail width={14} height={14} className='mr-1' /> Email:{" "}
+                                <User width={14} height={14} className='mr-1' /> Owner: {}
                             </li>
                         </div>
 
                         <div>
                             <li className='mb-1'>
-                                <User width={14} height={14} className='mr-1' /> Gender:{" "}
+                                <Book width={14} height={14} className='mr-1' /> Description:{" "}
+                                {this.state.data.description}
                             </li>
                         </div>
 
                         <div>
                             <li className='mb-1'>
-                                <Phone width={14} height={14} className='mr-1' /> Mobile:{" "}
-                            </li>
-                        </div>
-
-                        <div>
-                            <li className='mb-1'>
-                                <MapPin width={14} height={14} className='mr-1' /> Address:{" "}
-                            </li>
-                        </div>
-
-                        <div>
-                            <li className='mb-1'>
-                                <Package width={14} height={14} className='mr-1' /> Projects:{" "}
-                            </li>
-                        </div>
-
-                        {/* <div>
-                            <li className="mb-1">
-                                <FileText width={14} height={14} className="mr-1" /> Works: {this.state.data.total_closed_works}
-                            </li>
-                        </div> */}
-
-                        <div>
-                            <li className='mb-1'>
-                                <Users width={14} height={14} className='mr-1' /> Colleagues:{" "}
+                                <Clock width={14} height={14} className='mr-1' /> Creat Date:{" "}
+                                {moment.utc(this.state.data.createdDate).format("DD/MM/YYYY")}
                             </li>
                         </div>
                     </ul>
                 </CardBody>
                 <CardFooter>
                     <Button
-                        className='width-percent-45'
+                        className='width-percent-45 mr-3'
                         color='primary'
                         onClick={event => this.setState({ isEdit: true })}>
-                        <FontAwesomeIcon icon={faEdit} /> Edit Quiz
+                        <FontAwesomeIcon icon={faEdit} /> Edit Subject
                     </Button>{" "}
                     <Button
                         className='width-percent-45'
                         color='danger'
                         onClick={event => this.setState({ isDelete: true })}>
-                        <FontAwesomeIcon icon={faTrash} /> Delete Quiz
+                        <FontAwesomeIcon icon={faTrash} /> Delete Subject
                     </Button>
                 </CardFooter>
             </Card>

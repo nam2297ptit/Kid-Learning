@@ -1,4 +1,4 @@
-const config_api = require("../../../config/config").config_api.quizz;
+const config_api = require("../../../config/config").config_api.questions;
 const utils = require("../../../utils/utils");
 const axios = require("axios");
 
@@ -24,14 +24,97 @@ function getListQuiz(id, callback) {
             }
         });
 }
-
-function getInfoProject(callback) {
+function createQuestion(data, callback) {
     axios({
-        url: config_api.project + "/" + utils.getProjectId(),
-        method: "GET",
-        withCredentials: true,
+        url: config_api.questions,
+        method: "POST",
         headers: {
             "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        data: {
+            subjectId: JSON.parse(localStorage.getItem("subject")).id,
+            quizId: localStorage.getItem("quiz"),
+            linkImage: data.linkImage,
+            linkVideo: null,
+            content: data.content,
+            result: data.result,
+            key: null,
+            solution: data.solution,
+        },
+    })
+        .then(result => {
+            return callback(false, result.data);
+        })
+        .catch(error => {
+            if (error.response) {
+                return callback(error.response);
+            } else if (error.request) {
+                return callback("Please check your internet connection to server");
+            } else {
+                return callback(error.message);
+            }
+        });
+}
+
+function editQuiz(data, callback) {
+    axios({
+        url: config_api.list_quizz + "/" + localStorage.getItem("quiz"),
+        method: "PATCH",
+        headers: {
+            "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        data: {
+            name: data.name,
+            timeTest: parseInt(data.timeTest),
+        },
+    })
+        .then(result => {
+            return callback(false, result.data);
+        })
+        .catch(error => {
+            if (error.response) {
+                return callback(error.response);
+            } else if (error.request) {
+                return callback("Please check your internet connection to server");
+            } else {
+                return callback(error.message);
+            }
+        });
+}
+
+function deleteQuiz(data, callback) {
+    axios({
+        url: config_api.list_quizz + "/" + localStorage.getItem("quiz"),
+        method: "DELETE",
+        headers: {
+            "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        data: {},
+    })
+        .then(result => {
+            return callback(false, result.data);
+        })
+        .catch(error => {
+            if (error.response) {
+                return callback(error.response);
+            } else if (error.request) {
+                return callback("Please check your internet connection to server");
+            } else {
+                return callback(error.message);
+            }
+        });
+}
+
+function deleteQuestion(i, callback) {
+    axios({
+        url: config_api.questions + "/" + i,
+        method: "DELETE",
+        headers: {
+            "Content-type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("token"),
         },
         data: {},
     })
@@ -51,5 +134,8 @@ function getInfoProject(callback) {
 
 module.exports = {
     getListQuiz: getListQuiz,
-    getInfoProject: getInfoProject,
+    editQuiz: editQuiz,
+    createQuestion: createQuestion,
+    deleteQuiz: deleteQuiz,
+    deleteQuestion: deleteQuestion,
 };

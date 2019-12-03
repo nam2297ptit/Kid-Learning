@@ -97,9 +97,9 @@ class Sidebar extends React.Component {
                                     to='/configuration'
                                 />
                             </h4>
-                            <h4>
+                            {/* <h4>
                                 <SidebarItem name='History' icon={faChartLine} to='/history' />
-                            </h4>
+                            </h4> */}
                         </React.Fragment>
                     </ul>
 

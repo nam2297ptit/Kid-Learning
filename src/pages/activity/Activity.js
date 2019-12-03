@@ -19,6 +19,10 @@ import {
     CustomInput,
     InputGroup,
     InputGroupAddon,
+    Modal,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,8 +32,10 @@ import {
     faComment,
     faTrash,
     faArrowAltCircleLeft,
-    faArrowAltCircleRight,
+    faEdit,
+    faTrashRestore,
 } from "@fortawesome/free-solid-svg-icons";
+import ReactLoading from "react-loading";
 import { CustomImg, LoadingSprinner, Description } from "../../components/CustomTag";
 import notifier from "simple-react-notifications";
 import cup from "../../assets/img/photos/cup.png";
@@ -43,16 +49,14 @@ const utils = require("../../utils/utils");
 class Rank extends React.Component {
     constructor(props) {
         super(props);
-        const { dataInfoProject } = this.props;
-        this.toggle = this.toggle.bind(this);
+
         this.state = {
-            dataInfoProject: dataInfoProject,
-            tooltipOpen: false,
+            data: [],
         };
     }
-    toggle() {
+    componentDidMount() {
         this.setState({
-            tooltipOpen: !this.state.tooltipOpen,
+            data: this.props.statistical.rank,
         });
     }
     render() {
@@ -82,56 +86,64 @@ class Rank extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope='row' className='float-left'>
-                                    <CustomImg
-                                        key={utils.randomString()}
-                                        src={cup_gold}
-                                        alt='cup'
-                                        className='img--user--square-2x'
-                                    />
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <th scope='row' className='text-left'>
-                                    <CustomImg
-                                        key={utils.randomString()}
-                                        src={cup_sliver}
-                                        alt='cup'
-                                        className='img--user--square-2x'
-                                    />
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <th scope='row' className='text-left'>
-                                    <CustomImg
-                                        key={utils.randomString()}
-                                        src={cup_cu}
-                                        alt='cup'
-                                        className='img--user--square-2x'
-                                    />
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <th scope='row' className='text-left pl-2'>
-                                    &emsp; 4
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <th scope='row' className='text-left pl-2'>
-                                    &emsp; 5
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
+                            {this.state.data.map((item, i) => {
+                                if (i === 1) {
+                                    return (
+                                        <tr>
+                                            <th scope='row' className='float-left'>
+                                                <CustomImg
+                                                    key={utils.randomString()}
+                                                    src={cup_gold}
+                                                    alt='cup'
+                                                    className='img--user--square-2x'
+                                                />
+                                            </th>
+                                            <td>{item.user.name}</td>
+                                            <td>{item.point}</td>
+                                        </tr>
+                                    );
+                                } else if (i === 2) {
+                                    return (
+                                        <tr>
+                                            <th scope='row' className='text-left'>
+                                                <CustomImg
+                                                    key={utils.randomString()}
+                                                    src={cup_sliver}
+                                                    alt='cup'
+                                                    className='img--user--square-2x'
+                                                />
+                                            </th>
+                                            <td>{item.user.name}</td>
+                                            <td>{item.point}</td>>
+                                        </tr>
+                                    );
+                                } else if (i === 3) {
+                                    return (
+                                        <tr>
+                                            <th scope='row' className='text-left'>
+                                                <CustomImg
+                                                    key={utils.randomString()}
+                                                    src={cup_cu}
+                                                    alt='cup'
+                                                    className='img--user--square-2x'
+                                                />
+                                            </th>
+                                            <td>{item.user.name}</td>
+                                            <td>{item.point}</td>
+                                        </tr>
+                                    );
+                                } else {
+                                    return (
+                                        <tr>
+                                            <th scope='row' className='text-left pl-2'>
+                                                &emsp; {i}
+                                            </th>
+                                            <td>{item.user.name}</td>
+                                            <td>{item.point}</td>
+                                        </tr>
+                                    );
+                                }
+                            })}
                         </tbody>
                     </Table>
                 </CardBody>
@@ -142,39 +154,156 @@ class Rank extends React.Component {
 class Information extends React.Component {
     constructor(props) {
         super(props);
-        const { dataInfoProject } = this.props;
-        this.toggle = this.toggle.bind(this);
         this.state = {
-            dataInfoProject: dataInfoProject,
-            tooltipOpen: false,
+            data: {},
+            isEdit: false,
+            isDelete: false,
         };
     }
-    toggle() {
-        this.setState({
-            tooltipOpen: !this.state.tooltipOpen,
+    componentDidMount() {
+        this.setState({ data: this.props.informartion });
+    }
+
+    handleEdit(event) {
+        let temp = Object.assign({}, this.state.data);
+        temp[event.target.name] = event.target.value;
+        this.setState({ data: temp });
+    }
+    saveQuiz() {
+        this.setState({ isEdit: false });
+        const that = this;
+        api.editQuiz(this.state.data, (err, result) => {
+            if (err) {
+                console.log(err);
+
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                console.log(result);
+
+                that.setState({
+                    data: result,
+                });
+            }
+        });
+    }
+    removeQuiz() {
+        this.setState({ isEdit: false });
+        const that = this;
+        api.deleteQuiz((err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                window.location.replace("/quiz");
+            }
         });
     }
     render() {
         return (
-            <Card>
-                <CardHeader>
-                    <CardTitle tag='h5' className='mb-0'>
-                        Infomartion
-                    </CardTitle>
-                </CardHeader>
-                <CardBody className='text-center m-3'>
-                    <h3 className='font-weight-bold'>Bài kiểm tra số 1</h3>
-                    <h4 className='mt-4'>Số lượng câu hỏi: </h4>
-                </CardBody>
-            </Card>
+            <React.Fragment>
+                <Modal isOpen={this.state.isEdit}>
+                    <ModalHeader className='d-flex justify-content-center'>Edit Quiz</ModalHeader>
+                    <ModalBody>
+                        <Label> Name Quiz </Label>
+                        <Input
+                            name='name'
+                            onChange={this.handleEdit.bind(this)}
+                            type='text'
+                            value={this.state.data.name}
+                        />
+                        <br></br>
+                        <Label> Test Time </Label>
+                        <Input
+                            name='timeTest'
+                            onChange={this.handleEdit.bind(this)}
+                            type='text'
+                            value={this.state.data.timeTest}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color='secondary' onClick={() => this.setState({ isEdit: false })}>
+                            Cancel
+                        </Button>
+                        <Button color='success' onClick={this.saveQuiz.bind(this)}>
+                            Save
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.isDelete}>
+                    <ModalHeader className='d-flex justify-content-center'>Delete Quiz</ModalHeader>
+                    <ModalBody>
+                        <h4>Do you want to delete this Quiz ?</h4>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            color='secondary'
+                            onClick={() => this.setState({ isDelete: false })}>
+                            Cancel
+                        </Button>
+                        <Button color='success' onClick={this.removeQuiz.bind(this)}>
+                            OK
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle tag='h1' className='my-0'>
+                            Infomartion
+                            <Button
+                                className='float-right d-inline  mr-0 text-danger'
+                                color='none'
+                                onClick={() => this.setState({ isDelete: true })}>
+                                <FontAwesomeIcon icon={faTrash} size='2x' />
+                            </Button>
+                            <Button
+                                className='float-right d-inline  mr-0 text-primary'
+                                color='none'
+                                onClick={() => this.setState({ isEdit: true })}>
+                                <FontAwesomeIcon icon={faEdit} size='2x' />
+                            </Button>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardBody className='text-center m-2'>
+                        <h3 className='font-weight-bold'>{this.state.data.name}</h3>
+                        <Row className='text-left'>
+                            <Col>
+                                <h4 className='mt-4'>
+                                    Questions number: {this.state.data.questionNumber}
+                                </h4>
+                            </Col>
+                            <Col>
+                                <h4 className='mt-4'>
+                                    Test Time: {this.state.data.timeTest} minutue
+                                </h4>
+                            </Col>
+                        </Row>
+                        <Row className='text-left'>
+                            <Col>
+                                <h4 className='mt-4'>
+                                    Created Date:{" "}
+                                    {moment.utc(this.state.createdDate).format("DD/MM/YYYY")}
+                                </h4>
+                            </Col>
+                            <Col>
+                                <h4 className='mt-4'>Status: {this.state.data.status}</h4>
+                            </Col>
+                        </Row>
+                    </CardBody>
+                </Card>
+            </React.Fragment>
         );
     }
 }
+
 class Questions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             text: "",
+            isShow: false,
+            isSave: false,
+            lenght_data: null,
             data: [],
             question: {
                 subjectId: null,
@@ -184,18 +313,13 @@ class Questions extends React.Component {
                 content: "",
                 result: [],
                 key: null,
-                solution: "",
+                solution: null,
             },
+            result: [],
         }; // You can also pass a Quill Delta here
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeSolution = this.handleChangeSolution.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
         this.handleSave = this.handleSave.bind(this);
-    }
-
-    handleChange(event) {
-        let temp = Object.assign({}, this.state.question);
-        temp[event.target.name] = event.target.value;
-        this.setState({ temp: temp });
     }
 
     toggle(component) {
@@ -204,222 +328,303 @@ class Questions extends React.Component {
         });
     }
 
+    handleChangeSolution(event) {
+        let temp = Object.assign({}, this.state.question);
+
+        temp["solution"] = event.target.value;
+
+        this.setState({
+            question: temp,
+        });
+    }
+
+    handleImageChange(event) {
+        let temp = Object.assign({}, this.state.question);
+
+        temp["linkImage"] = event.target.value;
+
+        this.setState({
+            question: temp,
+            tempLogo: event.target.value,
+        });
+    }
+
+    handleSolution() {
+        this.setState({
+            isShow: !this.state.isShow,
+        });
+    }
+
     handleCreate() {
         let temp = [...this.state.data];
-        console.log(temp);
-        let question = {
-            subjectId: 1,
-            quizId: 1,
-            linkImage: null,
-            linkVideo: null,
-            content: "1",
-            result: ["A", "B", "F", "D"],
-            key: null,
-            solution: "1",
-        };
-        temp.push(question);
+        temp.push(this.state.question);
+        this.setState({ data: temp, isSave: true });
+    }
 
-        this.setState({ data: temp });
-    }
-    componentDidMount() {
-        this.setState({ data: this.props.questions });
-    }
-    handleImageChange(event) {
-        let temp = Object.assign({}, this.state.temp);
-
-        temp[event.target.name] = event.target.value;
-        this.setState({
-            temp: temp,
-            tempLogo: event.target.value,
-        });
-        this.setState({
-            changeLogo: event.target.value,
-            tempLogo: event.target.value,
-        });
-    }
     handleSave(content) {
         let temp = Object.assign({}, this.state.question);
         temp["content"] = content;
         this.setState({ question: temp });
     }
 
-    render() {
-        console.log(this.state.question);
+    handleSaveQuestion() {
+        let question = Object.assign({}, this.state.question);
 
+        const that = this;
+        api.createQuestion(question, (err, result) => {
+            if (err) {
+                console.log(err);
+
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                let question = {
+                    subjectId: null,
+                    quizId: null,
+                    linkImage: null,
+                    linkVideo: null,
+                    content: null,
+                    result: [],
+                    key: null,
+                    solution: null,
+                };
+                that.setState({
+                    isSave: false,
+                    question: question,
+                    tempLogo: null,
+                });
+            }
+        });
+    }
+
+    handleDeleteQuestion(index, i) {
+        let data = [...this.state.data];
+        delete data[i].result[index];
+        this.setState({ data: data });
+    }
+    handleCreateResult() {
+        let data = [...this.state.data];
+        data[data.length - 1].result.push("");
+        this.setState({ data: data });
+    }
+    handleKeyAnswer(event) {
+        let data = [...this.state.data];
+        let question = Object.assign({}, this.state.question);
+        data[data.length - 1].result[event.target.id[0]] = event.target.value;
+        question.result[event.target.id[0]] = event.target.value;
+        this.setState({ data: data, question: question });
+    }
+
+    removeQuiz(index) {
+        const that = this;
+        let data = [...this.state.data];
+        api.deleteQuestion(data[index].id, (err, result) => {
+            if (err) {
+                notifier.error(err.data === undefined ? err : err.data._error_message);
+            } else {
+                delete data[index];
+                this.setState({ data: data });
+            }
+        });
+    }
+
+    componentDidMount() {
+        this.setState({ data: this.props.questions, lenght_data: this.props.questions.length });
+    }
+
+    render() {
         return (
             <Card>
                 <CardHeader>
                     <CardTitle tag='h5' className='mb-0'>
                         Questions
-                        <Button className='float-right d-inline bg-success'>Save questions</Button>
                     </CardTitle>
                 </CardHeader>
                 <CardBody>
                     {/*  */}
                     {this.state.data.map((item, i) => {
                         return (
-                            <Card>
+                            <Card color='success' outline>
                                 <CardHeader>
                                     <CardTitle tag='h5' className='mb-0 d-inline '>
                                         {"Question " + (i + 1)}
                                     </CardTitle>
-                                    <Button
-                                        color='none'
-                                        className='close d-inline '
-                                        //onClick={() => this.handerUpdate()}
-                                    >
-                                        <FontAwesomeIcon icon={faTrash} color='red' />
-                                    </Button>
+                                    {i + 1 === this.state.data.length &&
+                                    this.state.isSave === true ? (
+                                        <Button
+                                            className='float-right d-inline bg-success'
+                                            onClick={this.handleSaveQuestion.bind(this)}>
+                                            Save questions
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            color='none'
+                                            className='close d-inline '
+                                            onClick={this.removeQuiz.bind(this, i)}>
+                                            <FontAwesomeIcon icon={faTrash} color='red' />
+                                        </Button>
+                                    )}
                                 </CardHeader>
                                 <CardBody>
-                                    <Label>Nội dung câu hỏi</Label>
-                                    <Description handleSave={this.handleSave} />
+                                    <Label>Nội dung câu hỏi:</Label>
+                                    {i < this.state.lenght_data ? (
+                                        <div
+                                            className='overflow-y-20x border min-height-0.5x cursor-pointer scrollbar-style-1 scrollbar-width-1x'
+                                            onClick={this.toggle.bind(this, "edit")}>
+                                            <div
+                                                className='p-2'
+                                                dangerouslySetInnerHTML={{
+                                                    __html: utils.returnThisWhenNull(
+                                                        item.content || this.state.question.content,
+                                                        "Điền nội dung câu hỏi vào đây....",
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <Description
+                                            handleSave={this.handleSave}
+                                            description={
+                                                item.content || this.state.question.content
+                                            }
+                                        />
+                                    )}
+
                                     <Row className='mt-2'>
                                         <Col sm='12' md='4'>
                                             <Label>Ảnh câu hỏi</Label>
-                                            <FormGroup>
-                                                <Input
-                                                    className='boder'
-                                                    type='text'
-                                                    name='file'
-                                                    id='logo_subject'
-                                                    placeholder='Url Image'
-                                                    onChange={this.handleImageChange}
+                                            {i < this.state.lenght_data ? (
+                                                <img
+                                                    alt='Img questions'
+                                                    src={item.linkImage || this.state.tempLogo}
+                                                    className='img-thumbnail'
+                                                    style={{
+                                                        height: "200px",
+                                                        width: "100%",
+                                                    }}
                                                 />
-                                                <Label
-                                                    for='logo_subject'
-                                                    className='hover-pointer:hover d-flex justify-content-center my-auto'>
-                                                    <img
-                                                        alt='Img questions'
-                                                        src={this.state.tempLogo || camera}
-                                                        className='img-thumbnail'
-                                                        style={{
-                                                            height: "200px",
-                                                            width: "100%",
-                                                        }}
+                                            ) : (
+                                                <FormGroup>
+                                                    <Input
+                                                        className='boder'
+                                                        type='text'
+                                                        name='file'
+                                                        id='logo_subject'
+                                                        placeholder='Url Image'
+                                                        onChange={this.handleImageChange}
+                                                        value={item.linkImage}
                                                     />
-                                                </Label>
-                                            </FormGroup>
+                                                    <Label
+                                                        for='logo_subject'
+                                                        className='hover-pointer:hover d-flex justify-content-center my-auto'>
+                                                        <img
+                                                            alt='Img questions'
+                                                            src={
+                                                                item.linkImage ||
+                                                                this.state.tempLogo
+                                                            }
+                                                            className='img-thumbnail'
+                                                            style={{
+                                                                height: "200px",
+                                                                width: "100%",
+                                                            }}
+                                                        />
+                                                    </Label>
+                                                </FormGroup>
+                                            )}
                                         </Col>
                                         <Col>
                                             <Label className='d-inline'>Câu trả lời</Label>
                                             <Button
                                                 color='none'
-                                                //onClick={() => this.handerUpdate()}
-                                            >
+                                                onClick={this.handleSolution.bind(this)}>
                                                 <FontAwesomeIcon icon={faComment} color='green' />
                                             </Button>
-
-                                            <Row>
-                                                <Col xs='11'>
-                                                    <InputGroup>
-                                                        <InputGroupAddon addonType='prepend'>
-                                                            <Button color='success'>Đúng</Button>
-                                                        </InputGroupAddon>
-                                                        <Input
-                                                            placeholder='default'
-                                                            className='d-inline'
-                                                        />
-                                                    </InputGroup>
-                                                    <Button
-                                                        color='none'
-                                                        block
-                                                        //onClick={() => this.handerUpdate()}
-                                                    >
-                                                        <Label>Thêm ảnh cho câu trả lời</Label>
-                                                    </Button>
-                                                </Col>
-                                                <Col xs='1'>
-                                                    <Button
-                                                        color='none'
-                                                        className='close d-inline'
-                                                        //onClick={() => this.handerUpdate()}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faTimes}
-                                                            className='m-1'
-                                                            color='red'
-                                                        />
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col xs='11'>
-                                                    <InputGroup>
-                                                        <InputGroupAddon addonType='prepend'>
-                                                            <Button color='danger'>
-                                                                &ensp;Sai&ensp;
-                                                            </Button>
-                                                        </InputGroupAddon>
-                                                        <Input
-                                                            placeholder='default'
-                                                            className='d-inline'
-                                                        />
-                                                    </InputGroup>
-                                                    <Button
-                                                        color='none'
-                                                        block
-                                                        //onClick={() => this.handerUpdate()}
-                                                    >
-                                                        <Label>Thêm ảnh cho câu trả lời</Label>
-                                                    </Button>
-                                                </Col>
-                                                <Col xs='1'>
-                                                    <Button
-                                                        color='none'
-                                                        className='close'
-                                                        //onClick={() => this.handerUpdate()}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faTimes}
-                                                            className='m-1'
-                                                            color='red'
-                                                        />
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col xs='11'>
-                                                    <InputGroup>
-                                                        <InputGroupAddon addonType='prepend'>
-                                                            <Button color='danger'>
-                                                                &ensp;Sai&ensp;
-                                                            </Button>
-                                                        </InputGroupAddon>
-                                                        <Input
-                                                            placeholder='default'
-                                                            className='d-inline'
-                                                        />
-                                                    </InputGroup>
-                                                    <Button
-                                                        color='none'
-                                                        block
-                                                        //onClick={() => this.handerUpdate()}
-                                                    >
-                                                        <Label>Thêm ảnh cho câu trả lời</Label>
-                                                    </Button>
-                                                </Col>
-                                                <Col xs='1'>
-                                                    <Button
-                                                        color='none'
-                                                        className='close'
-                                                        //onClick={() => this.handerUpdate()}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faTimes}
-                                                            className='m-1'
-                                                            color='red'
-                                                        />
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                            <Button
-                                                block
-                                                color='none'
-                                                className='load-more mt-2 text-primary font-weight-bold'
-                                                onClick={this.handleCreate.bind(this)}>
-                                                <FontAwesomeIcon icon={faPlus} /> Thêm câu trả lời
-                                            </Button>
+                                            <InputGroup className='my-1' name='solution'>
+                                                <Input
+                                                    name='solution'
+                                                    placeholder='solution'
+                                                    className='d-inline'
+                                                    value={item.solution}
+                                                    onChange={this.handleChangeSolution}
+                                                />
+                                            </InputGroup>
+                                            {item.result.map((data, index) => {
+                                                if (index === 0) {
+                                                    return (
+                                                        <Row className='my-2'>
+                                                            <Col xs='11'>
+                                                                <InputGroup>
+                                                                    <InputGroupAddon addonType='prepend'>
+                                                                        <Button color='success'>
+                                                                            Đúng
+                                                                        </Button>
+                                                                    </InputGroupAddon>
+                                                                    <Input
+                                                                        placeholder='answer'
+                                                                        className='d-inline'
+                                                                        id={index}
+                                                                        value={data}
+                                                                        onChange={this.handleKeyAnswer.bind(
+                                                                            this,
+                                                                        )}
+                                                                    />
+                                                                </InputGroup>
+                                                            </Col>
+                                                        </Row>
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <Row className='my-2'>
+                                                            <Col xs='11'>
+                                                                <InputGroup>
+                                                                    <InputGroupAddon addonType='prepend'>
+                                                                        <Button color='danger'>
+                                                                            &ensp;Sai&ensp;
+                                                                        </Button>
+                                                                    </InputGroupAddon>
+                                                                    <Input
+                                                                        placeholder='default'
+                                                                        className='d-inline'
+                                                                        value={data}
+                                                                        id={index}
+                                                                        onChange={this.handleKeyAnswer.bind(
+                                                                            this,
+                                                                        )}
+                                                                    />
+                                                                </InputGroup>
+                                                            </Col>
+                                                            {i < this.state.lenght_data ? null : (
+                                                                <Col xs='1'>
+                                                                    <Button
+                                                                        color='none'
+                                                                        className='close'
+                                                                        onClick={this.handleDeleteQuestion.bind(
+                                                                            this,
+                                                                            index,
+                                                                            i,
+                                                                        )}>
+                                                                        <FontAwesomeIcon
+                                                                            icon={faTimes}
+                                                                            className='m-1'
+                                                                            color='red'
+                                                                        />
+                                                                    </Button>
+                                                                </Col>
+                                                            )}
+                                                        </Row>
+                                                    );
+                                                }
+                                            })}
+                                            {i < this.state.lenght_data ? null : (
+                                                <Button
+                                                    block
+                                                    color='none'
+                                                    className='load-more mt-2 text-primary font-weight-bold'
+                                                    onClick={this.handleCreateResult.bind(this)}>
+                                                    <FontAwesomeIcon icon={faPlus} /> Thêm câu trả
+                                                    lời
+                                                </Button>
+                                            )}
                                         </Col>
                                     </Row>
                                 </CardBody>
@@ -432,7 +637,8 @@ class Questions extends React.Component {
                         block
                         color='primary'
                         className='load-more'
-                        onClick={this.handleCreate.bind(this)}>
+                        onClick={this.handleCreate.bind(this)}
+                        hidden={this.state.isSave ? true : false}>
                         <FontAwesomeIcon icon={faPlusCircle} /> Thêm câu hỏi
                     </Button>
                 </CardBody>
@@ -449,6 +655,7 @@ class Timeline extends React.Component {
             isLoaderAPI_InfoProject: false,
             questions: [],
             statistical: {},
+            data: {},
         };
     }
     componentDidMount() {
@@ -464,18 +671,20 @@ class Timeline extends React.Component {
                 console.log(result);
 
                 that.setState({
+                    data: result,
                     questions: result.questionArray,
                     statistical: result.statistical,
                     isLoaderAPI: true,
                 });
             }
         });
-        // this.setState({
-        //     data: Data,
-        // });
     }
     render() {
-        return (
+        return !this.state.isLoaderAPI ? (
+            <center>
+                <ReactLoading type='bars' color='black' />
+            </center>
+        ) : (
             <Container fluid className='p-0  h-100'>
                 <Card className='my-0 mb-2 '>
                     <CardHeader>
@@ -486,7 +695,7 @@ class Timeline extends React.Component {
                                 size='2x'
                             />
                         </Link>
-                        <h4 className='d-inline mb-2 font-weight-bold'>Bài tập số 1</h4>
+                        <h4 className='d-inline mb-2 font-weight-bold'>{this.state.data.name}</h4>
                     </CardHeader>
                 </Card>
                 <Row>
@@ -494,8 +703,8 @@ class Timeline extends React.Component {
                         <Questions questions={this.state.questions} />
                     </Col>
                     <Col md='5' xl='4'>
-                        <Information />
-                        <Rank />
+                        <Information informartion={this.state.data} />
+                        <Rank statistical={this.state.statistical} />
                     </Col>
                 </Row>
             </Container>
