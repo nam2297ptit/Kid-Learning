@@ -308,7 +308,7 @@ class Questions extends React.Component {
                 linkImage: null,
                 linkVideo: null,
                 content: null,
-                result: [],
+                result: ["", "", "", ""],
                 key: null,
                 solution: null,
             },
@@ -381,7 +381,7 @@ class Questions extends React.Component {
                     linkImage: null,
                     linkVideo: null,
                     content: null,
-                    result: [],
+                    result: ["", "", "", ""],
                     key: null,
                     solution: null,
                 };
@@ -401,11 +401,13 @@ class Questions extends React.Component {
         delete data[i].result[index];
         this.setState({ data: data });
     }
+
     handleCreateResult() {
         let data = [...this.state.data];
         data[data.length - 1].result.push("");
         this.setState({ data: data });
     }
+
     handleKeyAnswer(event) {
         let data = [...this.state.data];
         let question = Object.assign({}, this.state.question);
@@ -421,8 +423,6 @@ class Questions extends React.Component {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
-                console.log(result);
-
                 data.pop();
                 this.setState({ data: data, lenght_data: this.state.lenght_data - 1 });
             }
