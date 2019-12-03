@@ -84,7 +84,7 @@ class Rank extends React.Component {
                         </thead>
                         <tbody>
                             {this.state.data.map((item, i) => {
-                                if (i === 1) {
+                                if (i === 0) {
                                     return (
                                         <tr>
                                             <th scope='row' className='float-left'>
@@ -99,7 +99,7 @@ class Rank extends React.Component {
                                             <td>{item.point}</td>
                                         </tr>
                                     );
-                                } else if (i === 2) {
+                                } else if (i === 1) {
                                     return (
                                         <tr>
                                             <th scope='row' className='text-left'>
@@ -111,10 +111,10 @@ class Rank extends React.Component {
                                                 />
                                             </th>
                                             <td>{item.user.name}</td>
-                                            <td>{item.point}</td>>
+                                            <td>{item.point}</td>
                                         </tr>
                                     );
-                                } else if (i === 3) {
+                                } else if (i === 2) {
                                     return (
                                         <tr>
                                             <th scope='row' className='text-left'>
@@ -133,7 +133,7 @@ class Rank extends React.Component {
                                     return (
                                         <tr>
                                             <th scope='row' className='text-left pl-2'>
-                                                &emsp; {i}
+                                                &emsp; {i + 1}
                                             </th>
                                             <td>{item.user.name}</td>
                                             <td>{item.point}</td>
@@ -185,7 +185,7 @@ class Information extends React.Component {
     }
     removeQuiz() {
         this.setState({ isEdit: false });
-        const that = this;
+
         api.deleteQuiz((err, result) => {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);

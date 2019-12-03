@@ -84,7 +84,7 @@ function editQuiz(data, callback) {
         });
 }
 
-function deleteQuiz(data, callback) {
+function deleteQuiz(callback) {
     axios({
         url: config_api.list_quizz + "/" + localStorage.getItem("quiz"),
         method: "DELETE",
