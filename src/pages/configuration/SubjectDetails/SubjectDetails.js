@@ -269,12 +269,10 @@ class ProfDetails extends Component {
                     <Form onSubmit={this.updateUser}>
                         <ModalBody>
                             <div className='Profile__containerImgUpdate'>
-                                <CustomImg
-                                    src=''
-                                    className='rounded-circle img-responsive mt-2 Profile__imgUpdate'
-                                    width='128'
-                                    height='128'
-                                />
+                                <center>
+                                    <CustomImg src='' className='img-responsive mt-2 ' />
+                                </center>
+
                                 <Label className='Profile__iconUpdateAvt' for='updateAvt'>
                                     <Input
                                         type='file'
@@ -492,11 +490,14 @@ class ProfDetails extends Component {
                     {!this.state.isEdit ? (
                         <React.Fragment>
                             <CustomImg
-                                src={this.state.data.image}
-                                className='img-responsive mb-3 img-fluid'
+                                src={
+                                    this.state.data.image ||
+                                    "https://atasouthport.com/wp-content/uploads/2017/04/default-image.jpg"
+                                }
+                                className='img-responsive mb-3 img-fluid m-auto d-flex justify-content-center'
                             />
                             {/* )} */}
-                            <CardTitle className='text-center font-weight-bold mb-0'>
+                            <CardTitle className='text-center font-weight-bold mb-0 mt-2'>
                                 <h1>{this.state.data.name}</h1>
                             </CardTitle>
                         </React.Fragment>

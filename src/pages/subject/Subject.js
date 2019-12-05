@@ -24,7 +24,7 @@ import { faGlobeAmericas, faKey, faPlus } from "@fortawesome/free-solid-svg-icon
 import { CustomImg } from "../../components/CustomTag";
 // import Notification from "../../components/Notification";
 // import { LoadingSprinner } from "../../components/CustomTag";
-import "./Subject.css";
+// import "./Subject.css";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -269,7 +269,7 @@ class Project extends React.Component {
                     <Row className='mt-3'>
                         {this.state.data.map((item, i) => {
                             return (
-                                <Col md='2' sm='12' className='mr-2'>
+                                <Col xs='3' sm='12' md='3'>
                                     <Link
                                         to='#'
                                         replace='true'
