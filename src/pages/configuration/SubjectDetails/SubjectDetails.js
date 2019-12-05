@@ -33,6 +33,7 @@ import { connect } from "react-redux";
 import "../Configuration.css";
 import moment from "moment";
 import ReactLoading from "react-loading";
+import image from "../../../assets/img/photos/image.jpg";
 
 const api = require("../api/api");
 const utils = require("../../../utils/utils");
@@ -496,10 +497,7 @@ class ProfDetails extends Component {
                             <React.Fragment>
                                 <CardBody>
                                     <CustomImg
-                                        src={
-                                            this.state.data.image ||
-                                            "https://atasouthport.com/wp-content/uploads/2017/04/default-image.jpg"
-                                        }
+                                        src={this.state.data.image || image}
                                         className='img-responsive mb-3 img-fluid m-auto d-flex justify-content-center'
                                     />
                                 </CardBody>

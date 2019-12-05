@@ -44,6 +44,8 @@ import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
 import cup_sliver from "../../assets/img/photos/cup-sliver.png";
 import cup_cu from "../../assets/img/photos/cup.png";
+import image from "../../assets/img/photos/image.jpg";
+
 const api = require("./api/api");
 const utils = require("../../utils/utils");
 
@@ -575,7 +577,8 @@ class Questions extends React.Component {
                                                             alt='Img questions'
                                                             src={
                                                                 item.linkImage ||
-                                                                this.state.tempLogo
+                                                                this.state.tempLogo ||
+                                                                image
                                                             }
                                                             className='img-thumbnail'
                                                             style={{
