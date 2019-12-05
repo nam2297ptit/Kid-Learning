@@ -22,6 +22,10 @@ import {
     ModalHeader,
     ModalFooter,
     ModalBody,
+    UncontrolledDropdown,
+    DropdownItem,
+    DropdownToggle,
+    DropdownMenu,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -95,7 +99,7 @@ class Rank extends React.Component {
                                                     className='img--user--square-2x'
                                                 />
                                             </th>
-                                            <td>{item.user.name}</td>
+                                            <td>{item.user.fullName}</td>
                                             <td>{item.point}</td>
                                         </tr>
                                     );
@@ -110,7 +114,7 @@ class Rank extends React.Component {
                                                     className='img--user--square-2x'
                                                 />
                                             </th>
-                                            <td>{item.user.name}</td>
+                                            <td>{item.user.fullName}</td>
                                             <td>{item.point}</td>
                                         </tr>
                                     );
@@ -125,7 +129,7 @@ class Rank extends React.Component {
                                                     className='img--user--square-2x'
                                                 />
                                             </th>
-                                            <td>{item.user.name}</td>
+                                            <td>{item.user.fullName}</td>
                                             <td>{item.point}</td>
                                         </tr>
                                     );
@@ -135,7 +139,7 @@ class Rank extends React.Component {
                                             <th scope='row' className='text-left pl-2'>
                                                 &emsp; {i + 1}
                                             </th>
-                                            <td>{item.user.name}</td>
+                                            <td>{item.user.fullName}</td>
                                             <td>{item.point}</td>
                                         </tr>
                                     );
@@ -301,6 +305,7 @@ class Questions extends React.Component {
             isShow: false,
             isSave: false,
             lenght_data: null,
+            isClose: false,
             data: [],
             question: {
                 subjectId: null,
@@ -423,8 +428,23 @@ class Questions extends React.Component {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
+                let question = {
+                    subjectId: null,
+                    quizId: null,
+                    linkImage: null,
+                    linkVideo: null,
+                    content: null,
+                    result: ["", "", "", ""],
+                    key: null,
+                    solution: null,
+                };
                 data.pop();
-                this.setState({ data: data, lenght_data: this.state.lenght_data - 1 });
+                this.setState({
+                    question: question,
+                    data: data,
+                    lenght_data: this.state.lenght_data - 1,
+                    isClose: false,
+                });
             }
         });
     }
@@ -435,86 +455,122 @@ class Questions extends React.Component {
 
     render() {
         return (
-            <Card>
-                <CardHeader>
-                    <CardTitle tag='h5' className='mb-0'>
-                        Questions
-                    </CardTitle>
-                </CardHeader>
-                <CardBody>
-                    {/*  */}
-                    {this.state.data.map((item, i) => {
-                        console.log(item);
+            <React.Fragment>
+                <Card>
+                    <CardHeader>
+                        <CardTitle tag='h5' className='mb-0'>
+                            Questions
+                        </CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                        {/*  */}
 
-                        return (
-                            <Card color='success' outline>
-                                <CardHeader>
-                                    <CardTitle tag='h5' className='mb-0 d-inline '>
-                                        {"Question " + (i + 1)}
-                                    </CardTitle>
-                                    {i + 1 === this.state.data.length &&
-                                    this.state.isSave === true ? (
-                                        <Button
-                                            className='float-right d-inline bg-success'
-                                            onClick={this.handleSaveQuestion.bind(this)}>
-                                            Save questions
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            color='none'
-                                            className='close d-inline '
-                                            onClick={this.removeQuestion.bind(this, i)}>
-                                            <FontAwesomeIcon icon={faTrash} color='red' />
-                                        </Button>
-                                    )}
-                                </CardHeader>
-                                <CardBody>
-                                    <Label>Nội dung câu hỏi:</Label>
-                                    {i < this.state.lenght_data ? (
-                                        <Input
-                                            type='textarea'
-                                            value={
-                                                utils.isEmpty(item.content) === true
-                                                    ? null
-                                                    : item.content
-                                            }
-                                            disabled
-                                        />
-                                    ) : (
-                                        <Input
-                                            onChange={this.handleSave}
-                                            type='textarea'
-                                            value={item.content || this.state.question.content}
-                                        />
-                                    )}
+                        {this.state.data.map((item, i) => {
+                            return (
+                                <React.Fragment>
+                                    <Card color='success' outline>
+                                        <CardHeader>
+                                            <CardTitle tag='h5' className='mb-0 d-inline '>
+                                                {"Question " + (i + 1)}
+                                            </CardTitle>
+                                            {i + 1 === this.state.data.length &&
+                                            this.state.isSave === true ? (
+                                                <Button
+                                                    className='float-right d-inline bg-success'
+                                                    onClick={this.handleSaveQuestion.bind(this)}>
+                                                    Save questions
+                                                </Button>
+                                            ) : (
+                                                <React.Fragment>
+                                                    <Modal isOpen={this.state.isClose}>
+                                                        <ModalHeader className='d-flex justify-content-center'>
+                                                            Delete question
+                                                        </ModalHeader>
+                                                        <ModalBody>
+                                                            <h4>
+                                                                Do you want to delete this question
+                                                                ?
+                                                            </h4>
+                                                        </ModalBody>
+                                                        <ModalFooter>
+                                                            <Button
+                                                                color='secondary'
+                                                                onClick={() =>
+                                                                    this.setState({
+                                                                        isClose: false,
+                                                                    })
+                                                                }>
+                                                                Cancel
+                                                            </Button>
+                                                            <Button
+                                                                color='success'
+                                                                onClick={this.removeQuestion.bind(
+                                                                    this,
+                                                                    i,
+                                                                )}>
+                                                                OK
+                                                            </Button>
+                                                        </ModalFooter>
+                                                    </Modal>
 
-                                    <Row className='mt-2'>
-                                        <Col sm='12' md='4'>
-                                            <Label>Ảnh câu hỏi</Label>
+                                                    <UncontrolledDropdown
+                                                        setActiveFromChild
+                                                        className='d-inline float-right'>
+                                                        <DropdownToggle
+                                                            tag='a'
+                                                            className='nav-link d-inline'
+                                                            caret>
+                                                            More
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                            <DropdownItem
+                                                                onClick={() =>
+                                                                    this.setState({ isClose: true })
+                                                                }>
+                                                                <FontAwesomeIcon
+                                                                    icon={faTrash}
+                                                                    className='mr-2'
+                                                                    color='red'
+                                                                />
+                                                                Delete question
+                                                            </DropdownItem>
+                                                        </DropdownMenu>
+                                                    </UncontrolledDropdown>
+                                                </React.Fragment>
+                                                // <Button
+                                                //     color='none'
+                                                //     className='close d-inline '
+                                                //     onClick={this.removeQuestion.bind(this, i)}>
+                                                //     <FontAwesomeIcon icon={faTrash} color='red' />
+                                                // </Button>
+                                            )}
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Label>Content questions:</Label>
                                             {i < this.state.lenght_data ? (
-                                                <img
-                                                    alt='Img questions'
-                                                    src={item.linkImage || this.state.tempLogo}
-                                                    className='img-thumbnail'
-                                                    style={{
-                                                        height: "200px",
-                                                        width: "100%",
-                                                    }}
+                                                <Input
+                                                    type='textarea'
+                                                    value={
+                                                        utils.isEmpty(item.content) === true
+                                                            ? null
+                                                            : item.content
+                                                    }
+                                                    disabled
                                                 />
                                             ) : (
-                                                <FormGroup>
-                                                    <Input
-                                                        className='boder'
-                                                        type='text'
-                                                        name='file'
-                                                        id='logo_subject'
-                                                        placeholder='Url Image'
-                                                        onChange={this.handleImageChange}
-                                                        value={item.linkImage}
-                                                    />
-                                                    <Label
-                                                        for='logo_subject'
-                                                        className='hover-pointer:hover d-flex justify-content-center my-auto'>
+                                                <Input
+                                                    onChange={this.handleSave}
+                                                    type='textarea'
+                                                    value={
+                                                        item.content || this.state.question.content
+                                                    }
+                                                />
+                                            )}
+
+                                            <Row className='mt-2'>
+                                                <Col sm='12' md='4'>
+                                                    <Label>Photo question</Label>
+                                                    {i < this.state.lenght_data ? (
                                                         <img
                                                             alt='Img questions'
                                                             src={
@@ -527,94 +583,129 @@ class Questions extends React.Component {
                                                                 width: "100%",
                                                             }}
                                                         />
-                                                    </Label>
-                                                </FormGroup>
-                                            )}
-                                        </Col>
-                                        <Col>
-                                            <Label className='d-inline'>Câu trả lời</Label>
-                                            <Button
-                                                color='none'
-                                                onClick={this.handleSolution.bind(this)}>
-                                                <FontAwesomeIcon icon={faComment} color='green' />
-                                            </Button>
-                                            <InputGroup className='my-1' name='solution'>
-                                                <Input
-                                                    name='solution'
-                                                    placeholder='solution'
-                                                    className='d-inline'
-                                                    value={item.solution}
-                                                    onChange={this.handleChangeSolution}
-                                                />
-                                            </InputGroup>
-                                            {item.result.map((data, index) => {
-                                                if (index === 0) {
-                                                    return (
-                                                        <Row className='my-2'>
-                                                            <Col xs='11'>
-                                                                <InputGroup>
-                                                                    <InputGroupAddon addonType='prepend'>
-                                                                        <Button color='success'>
-                                                                            Đúng
+                                                    ) : (
+                                                        <FormGroup>
+                                                            <Input
+                                                                className='boder'
+                                                                type='text'
+                                                                name='file'
+                                                                id='logo_subject'
+                                                                placeholder='Url Image'
+                                                                onChange={this.handleImageChange}
+                                                                value={item.linkImage}
+                                                            />
+                                                            <Label
+                                                                for='logo_subject'
+                                                                className='hover-pointer:hover d-flex justify-content-center my-auto'>
+                                                                <img
+                                                                    alt='Img questions'
+                                                                    src={
+                                                                        item.linkImage ||
+                                                                        this.state.tempLogo
+                                                                    }
+                                                                    className='img-thumbnail'
+                                                                    style={{
+                                                                        height: "200px",
+                                                                        width: "100%",
+                                                                    }}
+                                                                />
+                                                            </Label>
+                                                        </FormGroup>
+                                                    )}
+                                                </Col>
+                                                <Col>
+                                                    <Label className='d-inline'>Answer</Label>
+                                                    <Button
+                                                        color='none'
+                                                        onClick={this.handleSolution.bind(this)}>
+                                                        <FontAwesomeIcon
+                                                            icon={faComment}
+                                                            color='green'
+                                                        />
+                                                    </Button>
+                                                    <InputGroup className='my-1' name='solution'>
+                                                        <Input
+                                                            size='lg'
+                                                            name='solution'
+                                                            placeholder='solution'
+                                                            className='d-inline'
+                                                            value={item.solution}
+                                                            onChange={this.handleChangeSolution}
+                                                        />
+                                                    </InputGroup>
+                                                    <Row className='mt-4 mb-4'>
+                                                        {item.result.map((data, index) => {
+                                                            if (index === 0) {
+                                                                return (
+                                                                    <Col xs='6' className='my-3'>
+                                                                        <InputGroup>
+                                                                            <InputGroupAddon addonType='prepend'>
+                                                                                <Button color='success'>
+                                                                                    True&nbsp;
+                                                                                </Button>
+                                                                            </InputGroupAddon>
+                                                                            <Input
+                                                                                size='lg'
+                                                                                placeholder='answer'
+                                                                                className='d-inline'
+                                                                                id={index}
+                                                                                value={data}
+                                                                                onChange={this.handleKeyAnswer.bind(
+                                                                                    this,
+                                                                                )}
+                                                                            />
+                                                                        </InputGroup>
+                                                                    </Col>
+                                                                );
+                                                            } else {
+                                                                return (
+                                                                    <React.Fragment>
+                                                                        <Col
+                                                                            xs='6'
+                                                                            className='my-3'>
+                                                                            <InputGroup>
+                                                                                <InputGroupAddon addonType='prepend'>
+                                                                                    <Button color='danger'>
+                                                                                        False
+                                                                                    </Button>
+                                                                                </InputGroupAddon>
+                                                                                <Input
+                                                                                    size='lg'
+                                                                                    placeholder='default'
+                                                                                    className='d-inline'
+                                                                                    value={data}
+                                                                                    id={index}
+                                                                                    onChange={this.handleKeyAnswer.bind(
+                                                                                        this,
+                                                                                    )}
+                                                                                />
+                                                                            </InputGroup>
+                                                                        </Col>
+                                                                        {/* {i <
+                                                                this.state.lenght_data ? null : (
+                                                                    <Col xs='1'>
+                                                                        <Button
+                                                                            color='none'
+                                                                            className='close'
+                                                                            onClick={this.handleDeleteQuestion.bind(
+                                                                                this,
+                                                                                index,
+                                                                                i,
+                                                                            )}>
+                                                                            <FontAwesomeIcon
+                                                                                icon={faTimes}
+                                                                                className='m-1'
+                                                                                color='red'
+                                                                            />
                                                                         </Button>
-                                                                    </InputGroupAddon>
-                                                                    <Input
-                                                                        placeholder='answer'
-                                                                        className='d-inline'
-                                                                        id={index}
-                                                                        value={data}
-                                                                        onChange={this.handleKeyAnswer.bind(
-                                                                            this,
-                                                                        )}
-                                                                    />
-                                                                </InputGroup>
-                                                            </Col>
-                                                        </Row>
-                                                    );
-                                                } else {
-                                                    return (
-                                                        <Row className='my-2'>
-                                                            <Col xs='11'>
-                                                                <InputGroup>
-                                                                    <InputGroupAddon addonType='prepend'>
-                                                                        <Button color='danger'>
-                                                                            &ensp;Sai&ensp;
-                                                                        </Button>
-                                                                    </InputGroupAddon>
-                                                                    <Input
-                                                                        placeholder='default'
-                                                                        className='d-inline'
-                                                                        value={data}
-                                                                        id={index}
-                                                                        onChange={this.handleKeyAnswer.bind(
-                                                                            this,
-                                                                        )}
-                                                                    />
-                                                                </InputGroup>
-                                                            </Col>
-                                                            {i < this.state.lenght_data ? null : (
-                                                                <Col xs='1'>
-                                                                    <Button
-                                                                        color='none'
-                                                                        className='close'
-                                                                        onClick={this.handleDeleteQuestion.bind(
-                                                                            this,
-                                                                            index,
-                                                                            i,
-                                                                        )}>
-                                                                        <FontAwesomeIcon
-                                                                            icon={faTimes}
-                                                                            className='m-1'
-                                                                            color='red'
-                                                                        />
-                                                                    </Button>
-                                                                </Col>
-                                                            )}
-                                                        </Row>
-                                                    );
-                                                }
-                                            })}
-                                            {i < this.state.lenght_data ? null : (
+                                                                    </Col>
+                                                                )} */}
+                                                                    </React.Fragment>
+                                                                );
+                                                            }
+                                                        })}
+                                                    </Row>
+                                                    {/* {i < this.state.lenght_data ? null : (
                                                 <Button
                                                     block
                                                     color='none'
@@ -623,25 +714,27 @@ class Questions extends React.Component {
                                                     <FontAwesomeIcon icon={faPlus} /> Thêm câu trả
                                                     lời
                                                 </Button>
-                                            )}
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
-                        );
-                    })}
+                                            )} */}
+                                                </Col>
+                                            </Row>
+                                        </CardBody>
+                                    </Card>
+                                </React.Fragment>
+                            );
+                        })}
 
-                    {/*  */}
-                    <Button
-                        block
-                        color='primary'
-                        className='load-more'
-                        onClick={this.handleCreate.bind(this)}
-                        hidden={this.state.isSave ? true : false}>
-                        <FontAwesomeIcon icon={faPlusCircle} /> Thêm câu hỏi
-                    </Button>
-                </CardBody>
-            </Card>
+                        {/*  */}
+                        <Button
+                            block
+                            color='primary'
+                            className='load-more'
+                            onClick={this.handleCreate.bind(this)}
+                            hidden={this.state.isSave ? true : false}>
+                            <FontAwesomeIcon icon={faPlusCircle} /> Thêm câu hỏi
+                        </Button>
+                    </CardBody>
+                </Card>
+            </React.Fragment>
         );
     }
 }

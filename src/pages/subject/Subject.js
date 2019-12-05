@@ -250,7 +250,7 @@ class Project extends React.Component {
                     </ModalFooter>
                 </Modal>
 
-                <Container fluid className='width-percent-60 w-75 '>
+                <Container fluid className='width-percent-60 w-100 '>
                     <Row>
                         <Col xs='4'>
                             <Input
@@ -269,7 +269,7 @@ class Project extends React.Component {
                     <Row className='mt-3'>
                         {this.state.data.map((item, i) => {
                             return (
-                                <Col xs='3' sm='12' md='3'>
+                                <Col xs='12' sm='12' md='3'>
                                     <Link
                                         to='#'
                                         replace='true'

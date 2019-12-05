@@ -88,7 +88,7 @@ class Sidebar extends React.Component {
                     <ul className='sidebar-nav'>
                         <React.Fragment>
                             <h4>
-                                <SidebarItem name='Tests' icon={faTasks} to='/quiz' />
+                                <SidebarItem name='List Quiz' icon={faTasks} to='/quiz' />
                             </h4>
                             <h4>
                                 <SidebarItem

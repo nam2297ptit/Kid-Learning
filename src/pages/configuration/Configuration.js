@@ -41,18 +41,7 @@ class Profile extends React.Component {
         if (url.substring(7, url.length) !== this.state.checkMainAcc) window.location.reload();
         return (
             <React.Fragment>
-                <Container fluid className='p-0'>
-                    <React.Fragment>
-                        <Row>
-                            <Col md='4' xl='3'>
-                                <SubjectDetails data={this.state.data} />
-                            </Col>
-                            <Col md='8' xl='9'>
-                                <ProfActivities />
-                            </Col>
-                        </Row>
-                    </React.Fragment>
-                </Container>
+                <SubjectDetails data={this.state.data} />
             </React.Fragment>
         );
     }

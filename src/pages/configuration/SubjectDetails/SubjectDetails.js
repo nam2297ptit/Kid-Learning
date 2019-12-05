@@ -13,11 +13,16 @@ import {
     Label,
     Input,
     Modal,
+    ModalHeader,
     ModalBody,
     ModalFooter,
     FormFeedback,
     CustomInput,
+    InputGroup,
+    InputGroupAddon,
+    InputGroupText,
     Col,
+    Row,
 } from "reactstrap";
 import { Phone, User, Camera, Book, Clock } from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -259,9 +264,8 @@ class ProfDetails extends Component {
         ) : (
             <Card>
                 <CardHeader>
-                    <CardTitle tag='h5' className='mb-0 '>
-                        Subject Configuration{/* {this.state.checkMainAcc === "" && ( */}
-                        {/* )} */}
+                    <CardTitle tag='h3' className='mb-0 '>
+                        <h3 className='text-center font-weight-bold'>Subject Configuration</h3>
                     </CardTitle>
                 </CardHeader>
 
@@ -469,6 +473,9 @@ class ProfDetails extends Component {
 
                 {/* modal delete subject */}
                 <Modal isOpen={this.state.isDelete}>
+                    <ModalHeader className='d-flex justify-content-center'>
+                        Delete Subject
+                    </ModalHeader>
                     <ModalBody tag='h4'>Do you want to delete this Subject ?</ModalBody>
                     <ModalFooter>
                         <Button
@@ -484,103 +491,123 @@ class ProfDetails extends Component {
                 </Modal>
 
                 <CardBody className='pb-0'>
-                    {/* {!this.state.isLoadedImg ? (
-                        <LoadingSprinner />
-                    ) : ( */}
-                    {!this.state.isEdit ? (
-                        <React.Fragment>
-                            <CustomImg
-                                src={
-                                    this.state.data.image ||
-                                    "https://atasouthport.com/wp-content/uploads/2017/04/default-image.jpg"
-                                }
-                                className='img-responsive mb-3 img-fluid m-auto d-flex justify-content-center'
-                            />
-                            {/* )} */}
-                            <CardTitle className='text-center font-weight-bold mb-0 mt-2'>
-                                <h1>{this.state.data.name}</h1>
-                            </CardTitle>
-                        </React.Fragment>
-                    ) : (
-                        <React.Fragment>
-                            <Card>
+                    <Row>
+                        <Col xs='12' sm='12' md='6' lg='6'>
+                            <React.Fragment>
                                 <CardBody>
-                                    <Label className='font-weight-bold'> Subject: </Label>
-                                    <Input
-                                        name='subject'
-                                        onChange={this.handleChangeSubject.bind(this)}
-                                        type='text'
-                                        placeholder='input text'
-                                        defaultValue={this.state.data.name}
-                                    />
-                                    <Label className='mt-1 font-weight-bold'>Image: </Label>
-                                    <Input
-                                        name='img'
-                                        onChange={this.handleChangeImg.bind(this)}
-                                        type='text'
-                                        placeholder='imput url image'
-                                        defaultValue={this.state.data.image}
+                                    <CustomImg
+                                        src={
+                                            this.state.data.image ||
+                                            "https://atasouthport.com/wp-content/uploads/2017/04/default-image.jpg"
+                                        }
+                                        className='img-responsive mb-3 img-fluid m-auto d-flex justify-content-center'
                                     />
                                 </CardBody>
-                                <CardFooter className='d-flex justify-content-end'>
+                            </React.Fragment>
+
+                            <React.Fragment>
+                                <Modal isOpen={this.state.isEdit}>
+                                    <ModalHeader className='d-flex justify-content-center'>
+                                        Edit Subject
+                                    </ModalHeader>
+                                    <ModalBody tag='h4'>
+                                        <Label className='font-weight-bold'> Subject: </Label>
+                                        <Input
+                                            name='subject'
+                                            onChange={this.handleChangeSubject.bind(this)}
+                                            type='text'
+                                            placeholder='input text'
+                                            defaultValue={this.state.data.name}
+                                        />
+                                        <Label className='mt-1 font-weight-bold'>Image: </Label>
+                                        <Input
+                                            name='img'
+                                            onChange={this.handleChangeImg.bind(this)}
+                                            type='text'
+                                            placeholder='imput url image'
+                                            defaultValue={this.state.data.image}
+                                        />
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button
+                                            color='secondary'
+                                            className='mr-1'
+                                            onClick={this.cancelEditSubject.bind(this)}>
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            color='success'
+                                            onClick={this.saveEditSubject.bind(this)}>
+                                            {" "}
+                                            Save
+                                        </Button>
+                                    </ModalFooter>
+                                </Modal>
+                            </React.Fragment>
+                        </Col>
+                        <Col xs='12' sm='12' md='6' lg='6'>
+                            <Card className='mt-3 '>
+                                <CardBody>
+                                    <h1 className='text-center font-weight-bold'>
+                                        {this.state.data.name}
+                                    </h1>
+                                    <InputGroup size='lg'>
+                                        <InputGroupAddon addonType='prepend'>
+                                            <InputGroupText>
+                                                <User width={14} height={14} className='mr-1' />
+                                                &ensp;&ensp; Owner:&ensp;
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input value={this.state.data.ownerId} disabled />
+                                    </InputGroup>
+                                    <InputGroup size='lg' className='mt-4'>
+                                        <InputGroupAddon addonType='prepend'>
+                                            <InputGroupText>
+                                                <Book width={14} height={14} className='mr-1' />{" "}
+                                                Description:
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input value={this.state.data.description} disabled />
+                                    </InputGroup>
+                                    <InputGroup size='lg' className='mt-4'>
+                                        <InputGroupAddon addonType='prepend'>
+                                            <InputGroupText>
+                                                <Clock width={14} height={14} className='mr-1' />
+                                                Creat Date:
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            value={moment
+                                                .utc(this.state.data.createdDate)
+                                                .format("DD/MM/YYYY")}
+                                            disabled
+                                        />
+                                    </InputGroup>
+                                </CardBody>
+
+                                <CardBody className='text-center font-weight-bold mb-0 mt-2'>
                                     <Button
-                                        color='secondary'
-                                        className='mr-1'
-                                        onClick={this.cancelEditSubject.bind(this)}>
-                                        Cancel
+                                        className='float-right mr-3 width-percent-45'
+                                        color='danger'
+                                        size='lg'
+                                        onClick={event => this.setState({ isDelete: true })}>
+                                        <FontAwesomeIcon icon={faTrash} /> Delete Subject
                                     </Button>
+
                                     <Button
-                                        color='success'
-                                        onClick={this.saveEditSubject.bind(this)}>
-                                        {" "}
-                                        Save
+                                        className=' mr-3 float-right width-percent-45'
+                                        color='primary'
+                                        size='lg'
+                                        onClick={event => this.setState({ isEdit: true })}>
+                                        <FontAwesomeIcon icon={faEdit} /> Edit Subject
                                     </Button>
-                                </CardFooter>
+                                </CardBody>
                             </Card>
-                        </React.Fragment>
-                    )}
+                        </Col>
+                    </Row>
                 </CardBody>
 
                 <hr />
-
-                <CardBody>
-                    <CardTitle tag='h5'>About</CardTitle>
-                    <ul className='list-unstyled mb-0'>
-                        <div>
-                            <li className='mb-1'>
-                                <User width={14} height={14} className='mr-1' /> Owner: {}
-                            </li>
-                        </div>
-
-                        <div>
-                            <li className='mb-1'>
-                                <Book width={14} height={14} className='mr-1' /> Description:{" "}
-                                {this.state.data.description}
-                            </li>
-                        </div>
-
-                        <div>
-                            <li className='mb-1'>
-                                <Clock width={14} height={14} className='mr-1' /> Creat Date:{" "}
-                                {moment.utc(this.state.data.createdDate).format("DD/MM/YYYY")}
-                            </li>
-                        </div>
-                    </ul>
-                </CardBody>
-                <CardFooter>
-                    <Button
-                        className='width-percent-45 mr-3'
-                        color='primary'
-                        onClick={event => this.setState({ isEdit: true })}>
-                        <FontAwesomeIcon icon={faEdit} /> Edit Subject
-                    </Button>{" "}
-                    <Button
-                        className='width-percent-45'
-                        color='danger'
-                        onClick={event => this.setState({ isDelete: true })}>
-                        <FontAwesomeIcon icon={faTrash} /> Delete Subject
-                    </Button>
-                </CardFooter>
             </Card>
         );
     }
