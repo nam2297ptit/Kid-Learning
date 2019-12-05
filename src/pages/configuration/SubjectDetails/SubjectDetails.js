@@ -212,7 +212,7 @@ class ProfDetails extends Component {
 
     saveEditSubject() {
         let temp = Object.assign({}, this.state);
-        let id = utils.getInfoSubject().id;
+        let id = JSON.parse(localStorage.getItem("subject")).id;
         api.editSubject(id, data_subject, (err, result) => {
             if (err) {
                 notifier.error(err.data === undefined ? err : err.data._error_message);
