@@ -425,6 +425,8 @@ class Questions extends React.Component {
 
     removeQuestion(index) {
         const that = this;
+        console.log(index);
+
         let data = [...this.state.data];
         api.deleteQuestion(data[index].id, (err, result) => {
             if (err) {
@@ -440,7 +442,8 @@ class Questions extends React.Component {
                     key: null,
                     solution: null,
                 };
-                data.pop();
+                data.splice(index, 1);
+
                 this.setState({
                     question: question,
                     data: data,
@@ -508,7 +511,7 @@ class Questions extends React.Component {
                                                                 color='success'
                                                                 onClick={this.removeQuestion.bind(
                                                                     this,
-                                                                    i,
+                                                                    this.state.remove_id,
                                                                 )}>
                                                                 OK
                                                             </Button>
@@ -527,7 +530,10 @@ class Questions extends React.Component {
                                                         <DropdownMenu>
                                                             <DropdownItem
                                                                 onClick={() =>
-                                                                    this.setState({ isClose: true })
+                                                                    this.setState({
+                                                                        isClose: true,
+                                                                        remove_id: i,
+                                                                    })
                                                                 }>
                                                                 <FontAwesomeIcon
                                                                     icon={faTrash}

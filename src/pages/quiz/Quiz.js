@@ -11,25 +11,14 @@ import {
     Row,
     Col,
     Card,
-    CardBody,
     CardTitle,
-    Badge,
-    UncontrolledTooltip,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownItem,
-    DropdownMenu,
     FormGroup,
     FormFeedback,
 } from "reactstrap";
-import { MoreHorizontal, Save } from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import avatar from "../../assets/img/avatars/avatar-2.jpg";
-import { CustomImg } from "../../components/CustomTag";
 import ReactLoading from "react-loading";
-import Data from "./Data.json";
 import { Link } from "react-router-dom";
 import notifier from "simple-react-notifications";
 
