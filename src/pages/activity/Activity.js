@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { CSVLink } from "react-csv";
 import {
     Container,
     Button,
@@ -32,6 +33,7 @@ import {
     faTrash,
     faArrowAltCircleLeft,
     faEdit,
+    faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from "react-loading";
 import { CustomImg } from "../../components/CustomTag";
@@ -51,20 +53,45 @@ class Rank extends React.Component {
 
         this.state = {
             data: [],
+            csv: [],
         };
     }
     componentDidMount() {
+        let rank = [...this.props.statistical.rank];
+        let element = [];
+        rank.map((values, index) => {
+            let value = {};
+            value.answer = values.keyArray;
+            value.user = values.user.fullName;
+            value.point = values.point;
+            value.time = moment(values.submitDate).format("DD/MM/YYYY h:mm:ss a");
+            element.push(value);
+            return element;
+        });
+
         this.setState({
             data: this.props.statistical.rank,
+            csv: element,
         });
     }
     render() {
+        console.log(this.state.csv);
         return (
             <Card>
                 <CardHeader>
-                    <CardTitle tag='h5' className='mb-0'>
+                    <CardTitle tag='h3' className='mb-0 mt-4 d-inline'>
                         Rank
                     </CardTitle>
+                    <div className='float-right d-inline'>
+                        <CSVLink data={this.state.csv} filename={"student_list.csv"}>
+                            <FontAwesomeIcon
+                                icon={faDownload}
+                                size='2x'
+                                color='grey'
+                                onClick={this.printListMember}
+                            />
+                        </CSVLink>
+                    </div>
                 </CardHeader>
                 <CardBody className='text-center m-3'>
                     <CustomImg

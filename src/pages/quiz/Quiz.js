@@ -203,27 +203,19 @@ class Quiz extends Component {
                             <FormFeedback invalid>Quiz name is a required field!</FormFeedback>
                         </FormGroup>
                         <FormGroup>
-                            <Label for='name_of_project'>Subject Name</Label>
+                            <Label for='name_of_project'>Test Time</Label>
                             <Input
                                 name='time'
                                 type='number'
                                 id={"tasks-input-status-new"}
                                 onChange={this.handleChange.bind(this)}
-                                placeholder='Test time'
+                                placeholder='Minute'
                                 invalid={
                                     this.state.submitted && !this.state.temp.time ? true : false
                                 }
                             />
                             <FormFeedback invalid>Time is a required field!</FormFeedback>
                         </FormGroup>
-
-                        {/* <Label className='mt-1'>Test time</Label>
-                        <Input
-                            name='time'
-                            type='number'
-                            id={"tasks-input-status-new"}
-                            onChange={this.handleChange.bind(this)}
-                            placeholder='Test time'></Input> */}
                     </ModalBody>
                     <ModalFooter>
                         <Button color='secondary' onClick={() => this.setState({ isClose: false })}>
