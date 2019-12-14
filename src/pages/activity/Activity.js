@@ -57,9 +57,11 @@ class Rank extends React.Component {
         };
     }
     componentDidMount() {
-        let rank = [...this.props.statistical.rank];
+        let rank = [...this.props.statistical.quiz];
         let element = [];
         rank.map((values, index) => {
+            console.log(values);
+
             let value = {};
             value.answer = values.keyArray;
             value.user = values.user.fullName;
@@ -70,18 +72,21 @@ class Rank extends React.Component {
         });
 
         this.setState({
-            data: this.props.statistical.rank,
+            data: this.props.statistical.rank.splice(0, 10),
             csv: element,
+            sum: this.props.statistical.rank.length,
         });
     }
     render() {
-        console.log(this.state.csv);
+        console.log(this.props.statistical.rank);
+
         return (
             <Card>
                 <CardHeader>
                     <CardTitle tag='h3' className='mb-0 mt-4 d-inline'>
-                        Rank
+                        Rank ({this.state.sum})
                     </CardTitle>
+
                     <div className='float-right d-inline'>
                         <CSVLink data={this.state.csv} filename={"student_list.csv"}>
                             <FontAwesomeIcon
