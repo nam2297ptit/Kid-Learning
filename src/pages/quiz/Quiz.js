@@ -16,7 +16,7 @@ import {
     FormFeedback,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import ReactLoading from "react-loading";
 import { Link } from "react-router-dom";

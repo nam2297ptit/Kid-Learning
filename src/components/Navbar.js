@@ -2,26 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { toggleSidebar } from "../redux/actions/sidebarActions";
 import { Link } from "react-router-dom";
-// import $ from "jquery";
+import { Collapse, Navbar, Nav, UncontrolledDropdown, DropdownToggle } from "reactstrap";
 
-import {
-    Collapse,
-    Navbar,
-    Nav,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-} from "reactstrap";
-
-import { PieChart, Settings, User, LogOut } from "react-feather";
-import { CustomImg } from "../components/CustomTag";
-
-import logo from "../assets/img/logo/logo.png";
+import { Settings, LogOut } from "react-feather";
 import "./Navbar.css";
-
-const utils = require("../utils/utils");
-const API = require("./api/api");
 
 class NavbarComponent extends React.Component {
     hanleLogout() {

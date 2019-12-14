@@ -1,5 +1,4 @@
 const config_api = require("../../../config/config").config_api.quizz;
-const utils = require("../../../utils/utils");
 const axios = require("axios");
 
 function getListQuiz(id, callback) {

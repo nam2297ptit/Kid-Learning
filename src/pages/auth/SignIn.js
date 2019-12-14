@@ -1,10 +1,7 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-// import { CustomImg, LoadingSprinner } from "../../components/CustomTag";
 import ReactLoading from "react-loading";
-import avata from "../../assets/img/logo/login.png";
 import logo from "../../assets/img/logo/Manager.png";
 import utils from "../../utils/utils";
 import "./SignIn.css";

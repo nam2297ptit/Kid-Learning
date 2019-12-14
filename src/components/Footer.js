@@ -33,7 +33,7 @@ const Footer = () => (
                     <p className='mb-0'>
                         &copy; {new Date().getFullYear()} -{" "}
                         <span href='/' className='text-muted'>
-                            App for kid
+                            English 4 SIX
                         </span>
                     </p>
                 </Col>

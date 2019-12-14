@@ -1,8 +1,6 @@
 import React from "react";
 import empty_avatar from "../assets/img/avatars/empty_avatar.png";
 import { Input } from "reactstrap";
-import LoadingSprinner from "./LoadingSprinner";
-import Attachments from "./Attachments";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import utils from "../utils/utils";
@@ -11,7 +9,7 @@ import Notification from "./Notification";
 const ValidInput = require("../utils/utils");
 const randomString = require("../utils/utils").randomString;
 
-export { LoadingSprinner, Attachments, Notification };
+export { Notification };
 
 export class CustomImg extends React.Component {
     render() {

@@ -1,5 +1,4 @@
 const config_api = require("../../../config/config").config_api.subject;
-const utils = require("../../../utils/utils");
 const axios = require("axios");
 
 function getInfoSubject(id, callback) {

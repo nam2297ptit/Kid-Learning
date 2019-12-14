@@ -1,19 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import {
-    dashboard as dashboardRoutes,
-    page as pageRoutes,
-    auth as authRoutes,
-    dashboardWithoutSidebar as dashboardWithoutSidebarRoutes,
-} from "./index";
+import { dashboard as dashboardRoutes, page as pageRoutes, auth as authRoutes } from "./index";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 import AuthLayout from "../layouts/AuthLayout";
-// import LandingLayout from "../layouts/Landing";
-// import Page404 from "../pages/auth/Page404";
-
-// import ScrollToTop from "../components/ScrollToTop";
 
 const PrivateRoute = (Layout, routes, isSidebar) =>
     routes.map(({ children, path, component: Component }, index) =>
@@ -83,19 +74,15 @@ function Routes() {
             {/* <ScrollToTop> */}
             <Switch>
                 <Route exact path='/' render={() => <Redirect to='/subject' />} />
-
                 {PublicRoute(AuthLayout, authRoutes)}
-
                 {PublicRoute(DashboardLayout, dashboardRoutes, true)}
-
                 {PrivateRoute(DashboardLayout, pageRoutes, true)}
-                {/* 
-                {sessionStorage.getItem("project") !== null ? (
-                    PrivateRoute(DashboardLayout, dashboardRoutes, true)
-                ) : (
-                    <Redirect to='/project' />
-                )} */}
 
+                {/* {localStorage.getItem("token") !== null ? (
+                    PrivateRoute(DashboardLayout, pageRoutes, true)
+                ) : (
+                    <Redirect to='/auth/sign-in' />
+                )} */}
                 {/* <Route
                     render={() => (
                         <AuthLayout>
@@ -104,7 +91,6 @@ function Routes() {
                     )}
                 /> */}
             </Switch>
-            {/* </ScrollToTop> */}
         </Router>
     );
 }

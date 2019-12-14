@@ -6,8 +6,6 @@ import Main from "../components/Main";
 import Navbar from "../components/Navbar";
 import Content from "../components/Content";
 import Footer from "../components/Footer";
-// import LoadingOverlay from "react-loading-overlay";
-// import Notification from "../components/Notification";
 
 function _objectWithoutProperties(obj, keys) {
     var target = {};
@@ -18,8 +16,6 @@ function _objectWithoutProperties(obj, keys) {
     }
     return target;
 }
-
-// const api = require("./api/api");
 
 class DashboardLayout extends React.Component {
     constructor(props) {
@@ -38,7 +34,6 @@ class DashboardLayout extends React.Component {
     }
 
     componentDidMount() {
-        const that = this;
         // api.getNotification((err, result) => {
         //     if (err) {
         //         Notification(

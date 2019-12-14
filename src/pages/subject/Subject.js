@@ -14,21 +14,14 @@ import {
     Label,
     CardBody,
     CardTitle,
-    CardText,
     Card,
-    CardImg,
-    CardSubtitle,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobeAmericas, faKey, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { CustomImg } from "../../components/CustomTag";
-// import Notification from "../../components/Notification";
-// import { LoadingSprinner } from "../../components/CustomTag";
-// import "./Subject.css";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { Camera } from "react-feather";
 import ReactLoading from "react-loading";
 import notifier from "simple-react-notifications";
 import "simple-react-notifications/dist/index.css";
@@ -37,7 +30,6 @@ import camera from "../../assets/img/photos/camera.png";
 import subject from "../../assets/img/photos/subject.png";
 
 const api = require("./api/api");
-const ValidInput = require("../../utils/ValidInput");
 
 class Project extends React.Component {
     constructor(props) {
@@ -227,7 +219,7 @@ class Project extends React.Component {
                                     <Label
                                         for='logo_subject'
                                         className='hover-pointer:hover d-flex justify-content-center mt-2'
-                                        style={{ cursor: "-webkit-grab", cursor: "grab" }}>
+                                        style={{ cursor: "-webkit-grab" }}>
                                         <CustomImg
                                             className='img-fluid img-thumbnail'
                                             style={{ height: "200px", width: "100%" }}

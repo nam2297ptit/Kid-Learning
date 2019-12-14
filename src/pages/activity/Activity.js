@@ -10,12 +10,10 @@ import {
     CardTitle,
     Col,
     Row,
-    Media,
     Table,
     Label,
     FormGroup,
     Input,
-    CustomInput,
     InputGroup,
     InputGroupAddon,
     Modal,
@@ -29,16 +27,14 @@ import {
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faTimes,
     faPlusCircle,
-    faPlus,
     faComment,
     faTrash,
     faArrowAltCircleLeft,
     faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from "react-loading";
-import { CustomImg, Description } from "../../components/CustomTag";
+import { CustomImg } from "../../components/CustomTag";
 import notifier from "simple-react-notifications";
 import cup from "../../assets/img/photos/cup.png";
 import cup_gold from "../../assets/img/photos/cup-gold.png";
@@ -154,6 +150,7 @@ class Rank extends React.Component {
         );
     }
 }
+
 class Information extends React.Component {
     constructor(props) {
         super(props);
@@ -177,12 +174,8 @@ class Information extends React.Component {
         const that = this;
         api.editQuiz(this.state.data, (err, result) => {
             if (err) {
-                console.log(err);
-
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
-                console.log(result);
-
                 that.setState({
                     data: result,
                 });
@@ -376,8 +369,6 @@ class Questions extends React.Component {
         const that = this;
         api.createQuestion(question, (err, result) => {
             if (err) {
-                console.log(err);
-
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
                 let data = [...this.state.data];
@@ -424,9 +415,6 @@ class Questions extends React.Component {
     }
 
     removeQuestion(index) {
-        const that = this;
-        console.log(index);
-
         let data = [...this.state.data];
         api.deleteQuestion(data[index].id, (err, result) => {
             if (err) {
@@ -545,12 +533,6 @@ class Questions extends React.Component {
                                                         </DropdownMenu>
                                                     </UncontrolledDropdown>
                                                 </React.Fragment>
-                                                // <Button
-                                                //     color='none'
-                                                //     className='close d-inline '
-                                                //     onClick={this.removeQuestion.bind(this, i)}>
-                                                //     <FontAwesomeIcon icon={faTrash} color='red' />
-                                                // </Button>
                                             )}
                                         </CardHeader>
                                         <CardBody>
@@ -690,40 +672,11 @@ class Questions extends React.Component {
                                                                                 />
                                                                             </InputGroup>
                                                                         </Col>
-                                                                        {/* {i <
-                                                                this.state.lenght_data ? null : (
-                                                                    <Col xs='1'>
-                                                                        <Button
-                                                                            color='none'
-                                                                            className='close'
-                                                                            onClick={this.handleDeleteQuestion.bind(
-                                                                                this,
-                                                                                index,
-                                                                                i,
-                                                                            )}>
-                                                                            <FontAwesomeIcon
-                                                                                icon={faTimes}
-                                                                                className='m-1'
-                                                                                color='red'
-                                                                            />
-                                                                        </Button>
-                                                                    </Col>
-                                                                )} */}
                                                                     </React.Fragment>
                                                                 );
                                                             }
                                                         })}
                                                     </Row>
-                                                    {/* {i < this.state.lenght_data ? null : (
-                                                <Button
-                                                    block
-                                                    color='none'
-                                                    className='load-more mt-2 text-primary font-weight-bold'
-                                                    onClick={this.handleCreateResult.bind(this)}>
-                                                    <FontAwesomeIcon icon={faPlus} /> Thêm câu trả
-                                                    lời
-                                                </Button>
-                                            )} */}
                                                 </Col>
                                             </Row>
                                         </CardBody>
@@ -765,8 +718,6 @@ class Timeline extends React.Component {
         const that = this;
         api.getListQuiz(id, (err, result) => {
             if (err) {
-                console.log(err);
-
                 notifier.error(err.data === undefined ? err : err.data._error_message);
             } else {
                 that.setState({

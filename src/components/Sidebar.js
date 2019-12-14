@@ -3,26 +3,12 @@ import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Box } from "react-feather";
-import { Badge, Button } from "reactstrap";
-// import PerfectScrollbar from "react-perfect-scrollbar";
+import { Badge } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faList,
-    faCircle,
-    faTasks,
-    faChartLine,
-    faUsers,
-    faFolder,
-    faCog,
-    faStar,
-    faBook,
-    faSignOutAlt,
-    faArrowAltCircleLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTasks, faCog, faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
 
 import routes from "../routes/index";
-const utils = require("../utils/utils");
 
 const SidebarItem = withRouter(({ name, badgeColor, badgeText, icon: Icon, location, to }) => {
     const getSidebarItemClass = path => {
@@ -71,7 +57,7 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        const { sidebar, layout, user } = this.props;
+        const { sidebar } = this.props;
         return (
             <nav
                 className={
@@ -82,7 +68,9 @@ class Sidebar extends React.Component {
                 <div className='sidebar-content'>
                     <a className='sidebar-brand' href='/'>
                         <Box className='align-middle text-primary mr-2' size={30} />{" "}
-                        <span className='align-middle'>E-Learn Manager</span>
+                        <span className='align-middle' style={{ color: "blue" }}>
+                            English 4 SIX
+                        </span>
                     </a>
 
                     <ul className='sidebar-nav'>

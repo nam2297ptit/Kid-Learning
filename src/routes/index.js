@@ -1,7 +1,3 @@
-//import async from "../components/Async";
-
-import { Layout as LayoutIcon, Sliders as SlidersIcon, Users as UsersIcon } from "react-feather";
-
 // Auth
 import SignIn from "../pages/auth/SignIn";
 // import SignUp from "../pages/auth/SignUp";
@@ -85,11 +81,6 @@ const pageRoutes = {
     path: "/",
     name: "Landing Page",
     children: [
-        // {
-        //     path: "/questions",
-        //     name: "Danh sách câu hỏi",
-        //     component: Questions,
-        // },
         {
             path: "/activity",
             name: "Hoạt động",
